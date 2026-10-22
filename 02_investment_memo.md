@@ -1,8 +1,10 @@
 # Investment memo — SLA-aware triage agent (P7, cybersecurity SaaS)
 
-**Recommendation: no-go for a year-1 build at today's assumptions. Conditional go
-if the S4 prototype shows ≥ 27 % handling time saved on routine tickets and a
-breach audit shows ≥ 30 % of SLA breaches are caused by misprioritisation.**
+**Recommendation: conditional go. Expected value ≈ €133k a year, above both the
+do-nothing (€112k) and the next-best project (€100k) — on one condition: the S4
+prototype must show ≥ 17 % handling time saved on routine tickets. Below that,
+no-go. The pessimistic case (−€187k) does not clear the hurdle, so we commit only
+the integration budget after the test, not before.**
 
 ## 1. [CFO question 1 — e.g. what is it worth?]
 Year-1 net value: −€309k / +€5k / +€448k (pessimistic / base / optimistic),
