@@ -27,9 +27,12 @@ raise a priority, never lower one without a human. Errors are priced at €54k a
 year in the base case. Not included: revenue retained from accounts that churn
 after repeated breaches — a real upside, unmeasured.
 
-**Build / buy / orchestrate:** we would orchestrate (score 3.80 vs build 3.65,
-buy 2.30) because client security telemetry must stay in our perimeter and our
-engineers have no capacity to run a full build; we would build if [condition].
+**Build / buy / orchestrate:** we would orchestrate (3.80 vs build 3.60, buy 2.40)
+because client security telemetry must stay in our perimeter and our engineers
+have no capacity to run a full build; we would build only if two engineers could
+be freed for evals and on-call. Buying or orchestrating removes ~€51k a year of
+build-specific costs, but the expected value (~€50k) still falls short of the
+hurdle — the no-go does not depend on how we deliver the agent.
 
 **Next step:** S4 prototype on 200 routine tickets to measure time saved, and a
 root-cause audit of last year's SLA breaches.
