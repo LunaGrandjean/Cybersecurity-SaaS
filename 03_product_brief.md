@@ -3,7 +3,7 @@
 > Session 3. One page. Built from `01_problem_statement.md`, `02_sizing.xlsx` and `02_investment_memo.md`.
 > v1 in class. v2 after the user research (simulated interviews within the team — see `03_user_research.md`): sections 9 and 10, and the changes marked *(v2)*.
 
-**Team:** [Luna, Malek, Jane] · **Starting point:** P7 · Cybersecurity SaaS · **Version:** v2 
+**Team:** Luna, Malek, Jane · **Starting point:** P7 · Cybersecurity SaaS · **Version:** v2 
 
 ## 1. Problem, user, do-nothing  *(from 01)*
 - **Problem in one sentence :** our 25 support engineers spend about 12 of the 33 minutes a ticket takes on triage (reading, severity, searching past incidents, routing), and we breach about 240 SLAs a year at ~€2,000 each, partly because a critical ticket written in a calm tone gets the wrong priority.
