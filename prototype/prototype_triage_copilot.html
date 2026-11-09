@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Triage copilot — prototype v0.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F5; --surface:#FFFFFF; --sunk:#F6F8FA; --ink:#17233A; --muted:#5A6678; --line:#D6DCE5;
+  --accent:#1F4E8C; --accent-ink:#FFFFFF; --focus:#2F6FD0;
+  --p1:#B42318; --p1-bg:#FDECEA; --p2:#A15C07; --p2-bg:#FFF3DF; --p3:#1F4E8C; --p3-bg:#E7EFFA; --p4:#4B5565; --p4-bg:#EDEFF2;
+  --ok:#1E7A46; --mask:#E6E0F5; --mask-ink:#4A3A8A;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1724; --surface:#172234; --sunk:#1C293D; --ink:#E6ECF4; --muted:#9AA8BC; --line:#2B3A52;
+    --accent:#6FA3EA; --accent-ink:#0F1724; --focus:#8DB8F2;
+    --p1:#FF8A7A; --p1-bg:#3A1B1A; --p2:#F2B45A; --p2-bg:#3A2A12; --p3:#8DB8F2; --p3-bg:#1B2C47; --p4:#B4BECC; --p4-bg:#253247;
+    --ok:#6BCB93; --mask:#2E2650; --mask-ink:#C9BCF5;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1724; --surface:#172234; --sunk:#1C293D; --ink:#E6ECF4; --muted:#9AA8BC; --line:#2B3A52;
+  --accent:#6FA3EA; --accent-ink:#0F1724; --focus:#8DB8F2;
+  --p1:#FF8A7A; --p1-bg:#3A1B1A; --p2:#F2B45A; --p2-bg:#3A2A12; --p3:#8DB8F2; --p3-bg:#1B2C47; --p4:#B4BECC; --p4-bg:#253247;
+  --ok:#6BCB93; --mask:#2E2650; --mask-ink:#C9BCF5; color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.5}
+button,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.top{display:flex;align-items:center;gap:16px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+.top h1{font-size:16px;font-weight:700;margin:0}
+.top .proto{margin-left:auto;font-size:13px;color:var(--muted)}
+.app{display:grid;grid-template-columns:320px minmax(0,1fr) 380px;min-height:calc(100vh - 50px)}
+.queue{border-right:1px solid var(--line);background:var(--surface);overflow:auto}
+.queue h2{font-size:13px;font-weight:600;color:var(--muted);margin:16px 16px 8px}
+.ticket{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 16px;cursor:pointer}
+.ticket:hover{background:var(--sunk)}
+.ticket[aria-current="true"]{background:var(--sunk);box-shadow:inset 3px 0 0 var(--accent)}
+.ticket .row{display:flex;align-items:center;gap:8px}
+.ticket .id{font-size:12px;color:var(--muted)}
+.ticket .title{font-weight:600;margin:2px 0 6px}
+.ticket .acct{font-size:13px;color:var(--muted)}
+.sev{display:inline-flex;align-items:center;font-weight:700;font-size:12px;border-radius:4px;padding:1px 7px}
+.sev.P1{color:var(--p1);background:var(--p1-bg)} .sev.P2{color:var(--p2);background:var(--p2-bg)}
+.sev.P3{color:var(--p3);background:var(--p3-bg)} .sev.P4{color:var(--p4);background:var(--p4-bg)}
+.clock{margin-left:auto;font-variant-numeric:tabular-nums;font-size:13px;font-weight:600}
+.bar{height:4px;background:var(--line);border-radius:2px;margin-top:8px;overflow:hidden}
+.bar span{display:block;height:100%}
+.state{font-size:12px;color:var(--ok);font-weight:600}
+.detail{padding:24px 28px;overflow:auto}
+.detail h2{font-size:22px;line-height:1.25;margin:4px 0 6px}
+.meta{color:var(--muted);font-size:14px;margin-bottom:18px}
+.msg{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 18px;max-width:70ch}
+.mask{background:var(--mask);color:var(--mask-ink);border-radius:3px;padding:0 4px;font-weight:600;font-size:.92em}
+.redact-note{font-size:13px;color:var(--muted);margin-top:10px}
+.copilot{border-left:1px solid var(--line);background:var(--surface);padding:20px;overflow:auto}
+.copilot h3{font-size:15px;margin:0 0 12px}
+.proposal{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--sunk)}
+.proposal .big{display:flex;align-items:center;gap:10px}
+.proposal .big .sev{font-size:16px;padding:3px 10px}
+.raised{margin-top:10px;border-left:3px solid var(--p1);padding:6px 10px;background:var(--p1-bg);color:var(--ink);font-size:14px;border-radius:0 4px 4px 0}
+.held{margin-top:10px;border-left:3px solid var(--p2);padding:6px 10px;background:var(--p2-bg);font-size:14px;border-radius:0 4px 4px 0}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:14px 0 0;font-size:14px}
+dt{color:var(--muted)} dd{margin:0;font-weight:500}
+.similar{margin-top:18px}
+.similar h4{font-size:14px;margin:0 0 6px}
+.similar ul{list-style:none;padding:0;margin:0}
+.similar li{border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-bottom:6px;font-size:14px;background:var(--surface)}
+.similar .score{color:var(--muted);font-size:12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:8px 12px;cursor:pointer;font-weight:600;font-size:14px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.change{margin-top:12px;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.change select{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--surface)}
+.rule{margin-top:18px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.taken{border:1px dashed var(--line);border-radius:8px;padding:14px;font-size:14px;color:var(--muted)}
+dialog{border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);max-width:440px;width:calc(100% - 32px);padding:20px}
+dialog::backdrop{background:rgba(15,23,36,.45)}
+dialog h3{margin:0 0 6px;font-size:17px}
+dialog textarea{width:100%;min-height:80px;border:1px solid var(--line);border-radius:6px;padding:8px;background:var(--sunk);margin:10px 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:6px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media (max-width:1050px){.app{grid-template-columns:1fr}.queue,.copilot{border:0}.queue{max-height:none}.detail{padding:20px}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Support console</h1>
+  <span class="proto">Prototype v0.2 · fake data · nothing is sent</span>
+</header>
+<div class="app">
+  <nav class="queue" aria-label="Ticket queue">
+    <h2>Open tickets, by time left on the SLA</h2>
+    <div id="queue"></div>
+  </nav>
+  <main class="detail" id="detail"></main>
+  <aside class="copilot" id="copilot" aria-label="Triage copilot"></aside>
+</div>
+<dialog id="lowerDlg">
+  <h3>Lower the priority?</h3>
+  <p id="lowerText" style="margin:0;font-size:14px;color:var(--muted)"></p>
+  <p style="font-size:14px;font-weight:600;margin:12px 0 6px">Why is it less urgent? (saved in the ticket log)</p>
+  <div class="actions" style="margin-top:0" id="presets">
+    <button class="btn" type="button">Core security flow working</button>
+    <button class="btn" type="button">Single user affected</button>
+    <button class="btn" type="button">Scheduled job, expected</button>
+  </div>
+  <label for="reason" style="font-size:13px;color:var(--muted);display:block;margin-top:10px">Or write your own reason</label>
+  <textarea id="reason" placeholder="e.g. Checked with the customer: only two test laptops affected."></textarea>
+  <div class="actions" style="margin-top:0">
+    <button class="btn primary" id="lowerOk" disabled>Lower priority</button>
+    <button class="btn" id="lowerCancel">Cancel</button>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const SLA = {P1:60, P2:240, P3:1440, P4:4320};
+const order = ["P1","P2","P3","P4"];
+const now = Date.now();
+const T = [
+ {id:"T-4821", acct:"Helix Logistics", tier:"Enterprise", declared:"P3", proposed:"P1", conf:0.82, team:"Incident response",
+  title:"New admin account we didn’t create",
+  body:"Hi team, no rush — our admin console shows a new global admin “svc-backup2” that nobody here created. It was added last night from <span class='mask'>[IP-1]</span>. Could you have a look when you can? Thanks, <span class='mask'>[EMAIL-1]</span>",
+  redacted:"2 items masked before analysis: 1 IP address, 1 e-mail.",
+  reason:"Unknown privileged account created outside any change window. Matches the pattern of an account takeover.",
+  evidence:"Global admin “svc-backup2” created at 23:14 from [IP-1]; no approved change window last night.",
+  opened:8, similar:[["INC-3310","Unrecognised admin created via API token","0.71"],["KB-SEC-12","Checklist: suspected account takeover","0.64"]]},
+ {id:"T-4823", acct:"Nordwind Energy", tier:"Enterprise", declared:"P3", proposed:"P3", conf:0.58, team:"Platform",
+  title:"Dashboard loads slowly",
+  body:"Since about 9:00 the dashboard takes more than 30 seconds to load for our analysts. The alerts page too. Probably our network?",
+  redacted:"Nothing to mask.", reason:"Performance issue; no security exposure detected.",
+  opened:25, similar:[["INC-2871","Slow dashboard caused by browser cache","0.62"]]},
+ {id:"T-4819", acct:"Orion Retail", tier:"Standard", declared:"P3", proposed:"P3", conf:0.91, team:"Reporting",
+  title:"Weekly PDF report arrives empty",
+  body:"The scheduled weekly PDF report has arrived empty for two weeks. We can export it manually in the meantime.",
+  redacted:"Nothing to mask.", reason:"Workaround exists; no security exposure.",
+  opened:95, similar:[["INC-2954","Empty scheduled report after time-zone change","0.83"],["KB-REP-04","Scheduled reports: troubleshooting","0.58"]]},
+ {id:"T-4817", acct:"Banque Arpège", tier:"Enterprise", declared:"P2", proposed:"P3", conf:0.77, team:"Endpoint",
+  title:"Two laptops show “agent outdated”",
+  body:"Two of our 800 laptops still show “agent outdated” after a reboot. Can you check?",
+  redacted:"Nothing to mask.", reason:"Two hosts out of 800, protection still active on both.",
+  opened:40, similar:[["INC-3122","Agent stuck on old version after OS update","0.79"]]},
+ {id:"T-4815", acct:"Banque Arpège", tier:"Enterprise", declared:"P2", proposed:"P2", conf:0.88, team:"Awareness module",
+  title:"Phishing simulation crashes above 500 users",
+  body:"The phishing-simulation module crashes every time we launch a campaign for more than 500 users.",
+  redacted:"Nothing to mask.", reason:"Module unusable for the customer’s main use; no security exposure.",
+  opened:70, similar:[["INC-3001","Campaign launcher timeout on large groups","0.74"]]},
+ {id:"T-4812", acct:"Orion Retail", tier:"Standard", declared:"P4", proposed:"P4", conf:0.95, team:"Account management",
+  title:"Where is your ISO 27001 certificate?",
+  body:"Where can I download your ISO 27001 certificate for our auditor?",
+  redacted:"Nothing to mask.", reason:"Documentation request.",
+  opened:300, similar:[["KB-CMP-01","Compliance documents and certificates","0.92"]]}
+];
+T.forEach(t=>{
+  t.current = order.indexOf(t.proposed) < order.indexOf(t.declared) ? t.proposed : t.declared; // never lower on its own
+  t.held = order.indexOf(t.proposed) > order.indexOf(t.declared);
+  t.raised = order.indexOf(t.proposed) < order.indexOf(t.declared);
+  t.status = "open"; t.taken = false; t.log = [];
+  t.created = now - t.opened*60000;
+});
+let sel = T[0].id;
+const $ = s=>document.querySelector(s);
+function deadline(t){return t.created + SLA[t.current]*60000}
+function left(t){return deadline(t) - Date.now()}
+function fmt(ms){ if(ms<=0) return "SLA breached"; const m=Math.floor(ms/60000), h=Math.floor(m/60);
+  if(h>=24) return Math.floor(h/24)+" d "+(h%24)+" h left"; if(h>0) return h+" h "+(m%60)+" min left";
+  const s=Math.floor((ms%60000)/1000); return m+" min "+String(s).padStart(2,"0")+" s left"; }
+function barColor(t){const r=left(t)/(SLA[t.current]*60000); return r<.25?"var(--p1)":r<.5?"var(--p2)":"var(--ok)"}
+function toast(msg){const el=$("#toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove("show"),2600)}
+function renderQueue(){
+  const list=[...T].sort((a,b)=>left(a)-left(b));
+  $("#queue").innerHTML = list.map(t=>{
+    const pct=Math.max(0,Math.min(100,100*left(t)/(SLA[t.current]*60000)));
+    return `<button class="ticket" data-id="${t.id}" aria-current="${t.id===sel}">
+      <div class="row"><span class="sev ${t.current}">${t.current}</span><span class="id">${t.id}</span>
+      <span class="clock" data-clock="${t.id}">${fmt(left(t))}</span></div>
+      <div class="title">${t.title}</div>
+      <div class="row"><span class="acct">${t.acct} · ${t.tier}</span>${t.status==="accepted"?'<span class="state" style="margin-left:auto">Triage accepted</span>':""}</div>
+      <div class="bar"><span data-bar="${t.id}" style="width:${pct}%;background:${barColor(t)}"></span></div>
+    </button>`}).join("");
+  document.querySelectorAll(".ticket").forEach(b=>b.onclick=()=>{sel=b.dataset.id;render()});
+}
+function renderDetail(){
+  const t=T.find(x=>x.id===sel);
+  $("#detail").innerHTML = `<div class="meta">${t.id} · ${t.acct} (${t.tier}) · opened ${t.opened} min ago · customer chose <span class="sev ${t.declared}">${t.declared}</span></div>
+    <h2>${t.title}</h2>
+    <div class="msg">${t.body}</div>
+    <p class="redact-note">${t.redacted} Masked items never leave our systems.</p>
+    ${t.log.length?`<div class="redact-note"><strong>Ticket log</strong><br>${t.log.join("<br>")}</div>`:""}`;
+}
+function renderCopilot(){
+  const t=T.find(x=>x.id===sel);
+  if(t.taken){
+    $("#copilot").innerHTML = `<h3>Triage copilot</h3><div class="taken">You’re triaging this ticket yourself. The copilot’s proposal is hidden.</div>
+      <div class="actions"><button class="btn" id="showAgain">Show the proposal again</button></div>`;
+    $("#showAgain").onclick=()=>{t.taken=false;render()}; return;
+  }
+  const opts=order.map(p=>`<option value="${p}" ${p===t.current?"selected":""}>${p}</option>`).join("");
+  $("#copilot").innerHTML = `<h3>Triage copilot</h3>
+    <div class="proposal">
+      <div class="big"><span class="sev ${t.current}">${t.current}</span><span>${t.current===t.proposed?"Proposed priority":"Current priority"}</span></div>
+      ${t.raised?`<div class="raised"><strong>Raised from ${t.declared} to ${t.proposed}.</strong> ${t.reason}${t.evidence?`<br><span style="font-size:13px"><strong>Evidence:</strong> ${t.evidence}</span>`:""}</div>`:""}
+      ${t.conf<0.7?`<div class="held"><strong>Low confidence — needs human triage.</strong> The copilot kept the customer’s priority. Check this one yourself.</div>`:""}
+      ${t.held&&t.current!==t.proposed?`<div class="held"><strong>The copilot suggests ${t.proposed}</strong>, but it can’t lower a priority. It stays ${t.current} until you confirm.</div>`:""}
+      ${!t.raised&&!t.held?`<div style="margin-top:10px;font-size:14px">${t.reason}</div>`:""}
+      <dl>
+        <dt>Confidence</dt><dd>${t.conf>=0.8?"High":t.conf>=0.7?"Medium":"Low"} (${Math.round(t.conf*100)} %) <span style="color:var(--muted);font-weight:400">· vs similar past tickets</span></dd>
+        <dt>SLA clock</dt><dd data-clock="${t.id}">${fmt(left(t))}</dd>
+        <dt>Team</dt><dd>${t.team}</dd>
+      </dl>
+    </div>
+    <div class="similar"><h4>Closest resolved tickets</h4><ul>
+      ${t.similar.map(s=>`<li><strong>${s[0]}</strong> ${s[1]} <span class="score">· match ${s[2]}</span></li>`).join("")}
+    </ul></div>
+    <div class="actions">
+      <button class="btn primary" id="accept" ${t.status==="accepted"?"disabled":""}>${t.status==="accepted"?"Triage accepted":"Accept triage"}</button>
+      ${t.held&&t.current!==t.proposed?`<button class="btn" id="confirmLower">Confirm ${t.proposed}</button>`:""}
+      <button class="btn" id="take">Take over</button>
+    </div>
+    <div class="change"><label for="prio">Change priority</label><select id="prio">${opts}</select></div>
+    <p class="rule">The copilot can raise a priority on its own, never lower it. Nothing is sent to the customer.</p>`;
+  $("#accept").onclick=()=>{t.status="accepted";t.log.push("Triage accepted ("+t.current+", "+t.team+")");toast("Triage accepted");render()};
+  $("#take").onclick=()=>{t.taken=true;t.log.push("Taken over by engineer");toast("You’re triaging this ticket");render()};
+  const cl=$("#confirmLower"); if(cl) cl.onclick=()=>askLower(t,t.proposed);
+  $("#prio").onchange=e=>{const v=e.target.value;
+    if(order.indexOf(v)<order.indexOf(t.current)){t.current=v;t.log.push("Priority raised to "+v+" by engineer");toast("Priority raised to "+v);render()}
+    else if(v!==t.current){askLower(t,v)}};
+}
+function askLower(t,v){
+  const d=$("#lowerDlg"), r=$("#reason"), ok=$("#lowerOk");
+  $("#lowerText").textContent=`From ${t.current} to ${v}. The SLA clock will change from ${SLA[t.current]/60} h to ${SLA[v]/60} h.`;
+  r.value=""; ok.disabled=true; r.oninput=()=>ok.disabled=r.value.trim().length<5;
+  document.querySelectorAll("#presets .btn").forEach(b=>b.onclick=()=>{r.value=b.textContent;ok.disabled=false});
+  ok.onclick=()=>{t.log.push("Priority lowered to "+v+" by engineer — reason: "+r.value.trim().replace(/</g,"&lt;"));t.current=v;t.held=false;d.close();toast("Priority lowered to "+v);render()};
+  $("#lowerCancel").onclick=()=>{d.close();render()};
+  d.showModal(); r.focus();
+}
+function render(){renderQueue();renderDetail();renderCopilot()}
+render();
+setInterval(()=>{
+  T.forEach(t=>{document.querySelectorAll(`[data-clock="${t.id}"]`).forEach(el=>el.textContent=fmt(left(t)));
+    const b=document.querySelector(`[data-bar="${t.id}"]`); if(b){b.style.width=Math.max(0,Math.min(100,100*left(t)/(SLA[t.current]*60000)))+"%";b.style.background=barColor(t)}});
+},1000);
+</script>
+</body>
+</html>
