@@ -6,16 +6,16 @@
 ## Session 1 — the six questions
 | # | Question | Our answer (provisional) | To check with |
 |---|---|---|---|
-| 1 | **EU AI Act:** which risk tier is our agent in, and why? (minimal · limited — transparency: tell the user it is an AI · high-risk · prohibited) | | |
-| 2 | **Data:** whose data does it use, and on what legal basis? (GDPR art. 6; what the B2B contract allows) | | |
-| 3 | **Accountability:** who is accountable when it is wrong — and where is the human? | | |
-| 4 | **Never:** what must it never do? (our first guardrail) | | |
-| 5 | **Explainability:** explainable to whom — the customer, the support agent, the auditor? | | |
-| 6 | **The people it cannot serve:** what happens to them? | | |
+| 1 | **EU AI Act:** which risk tier is our agent in, and why? (minimal · limited — transparency: tell the user it is an AI · high-risk · prohibited) | **Minimal risk.** An internal tool that proposes a priority to our own support engineers; it is not in the Annex III high-risk list and never talks to a customer. Engineers know every proposal comes from the agent (it is labelled in the console). If it ever wrote to customers, it would become limited risk (art. 50: tell the user it is an AI). | Legal |
+| 2 | **Data:** whose data does it use, and on what legal basis? (GDPR art. 6; what the B2B contract allows) | Ticket text, the client's contract and SLA tier, and logs that contain personal data of the client's employees (IPs, e-mails, usernames). Legal basis: the support contract with the B2B client (art. 6(1)(b)); for the logs we act as processor under the client's DPA. Training a model on client tickets is a different purpose and needs an explicit contract clause. | DPO · client contract template |
+| 3 | **Accountability:** who is accountable when it is wrong — and where is the human? | The agent only proposes. The engineer who accepts, corrects or lowers a priority is accountable for that ticket; the head of support is accountable for the agent and its rules. A person sees every ticket before any action, and only a person can lower a priority. | Head of support |
+| 4 | **Never:** what must it never do? (our first guardrail) | Lower a ticket's priority on its own · contact a customer · send raw logs outside our perimeter (redaction before any model call). | Security team |
+| 5 | **Explainability:** explainable to whom — the customer, the support agent, the auditor? | **To the engineer:** a one-line reason, the evidence and the closest resolved tickets for every proposal. **To the auditor or the client in a penalty dispute:** a log of every proposal, acceptance and change of priority, with the reason given. Not to the customer directly: the customer only talks to engineers. | Head of support · DPO |
+| 6 | **The people it cannot serve:** what happens to them? | Tickets in languages other than English and French, tickets with too little information, and new attack types with no past case. The agent does not guess: it keeps the customer's priority or higher and flags "needs human triage". These cases are reported separately in the evaluation. | Support team (volume of such tickets) |
 
 ## Session 2 — the cost of error
-- Which cost-of-error line is a **legal or reputational** risk, not just money? …
-- Who in the company **owns** that risk? …
+- Which cost-of-error line is a **legal or reputational** risk, not just money? **A missed P1.** The SLA penalty (~€2,000 per breach) is only the visible part: an enterprise security client whose incident was triaged as routine may leave, and that churn is not in our sizing. Second line: a **redaction failure**, where client logs containing personal data reach a third party, is a GDPR breach, not just a cost.
+- Who in the company **owns** that risk? The **head of support** owns missed P1s and SLA penalties (and the switch that puts the agent back to suggestions only); the **DPO** owns the redaction and logs risk.
 
 ## Session 3 — data and trust level
 > Paste this section into governance.md, then delete this file.
