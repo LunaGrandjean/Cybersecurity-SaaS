@@ -1,8 +1,5 @@
 # 03 — Product brief · SLA-aware triage copilot · v2
 
-> Session 3. One page. Built from `01_problem_statement.md`, `02_sizing.xlsx` and `02_investment_memo.md`.
-> v1 in class. v2 after the user research (simulated interviews within the team — see `03_user_research.md`): sections 9 and 10, and the changes marked *(v2)*.
-
 **Team:** Luna, Malek, Jane · **Starting point:** P7 · Cybersecurity SaaS · **Version:** v2 
 
 ## 1. Problem, user, do-nothing  *(from 01)*
