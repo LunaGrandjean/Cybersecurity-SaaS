@@ -2,6 +2,8 @@
 
 > One screen. Nine classic blocks (Ash Maurya) + five blocks an AI product cannot skip.
 
+> **S4 status — 12 November 2026:** functional local v0.4, default suggestions-only. Current data: 300 synthetic training rows with AI-proposed labels pending review; 50 new unlabelled evaluation inputs. The original 20 examples are exposed demo data. No two-grader product result or measured time saving is available. Architecture and spec v2 are the implementation reference; S3 plans below are not measurements.
+
 ## The nine classic blocks
 | Block | Our answer | Comes from |
 |---|---|---|

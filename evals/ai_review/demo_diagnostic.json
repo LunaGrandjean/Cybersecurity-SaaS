@@ -1,0 +1,1428 @@
+{
+  "date": "2026-11-15",
+  "executed_at": "2026-11-15T18:34:07.491911+00:00",
+  "kind": "exploratory automatic diagnostic on exposed demo cases",
+  "human_evaluation": false,
+  "human_graders": [],
+  "independent_holdout": false,
+  "model_version": "41acde6fcf51b4c1",
+  "reference_sha256": "91b8e3411768dd54cc38e5d4d94086923cb6bef49bbe89309ff515209746d7b8",
+  "cases": 20,
+  "counts": {
+    "severity_agreement": 16,
+    "team_agreement": 14,
+    "candidate_source_hit": 15,
+    "never_lower": 20,
+    "customer_isolation": 20,
+    "reference_p1": 8,
+    "p1_detected": 6,
+    "reference_non_p1": 12,
+    "false_p1": 0
+  },
+  "error_categories": {
+    "no candidate relevant source in top 3": 5,
+    "severity disagreement": 4,
+    "routing disagreement": 6
+  },
+  "limitations": [
+    "No two-person grading",
+    "Demo data exposed during development",
+    "Reference not independently verified",
+    "No measured handling-time saving",
+    "Not the official 62% acceptance metric"
+  ],
+  "results": [
+    {
+      "case_id": "C01",
+      "reference_severity": "P1",
+      "reference_team": "Incident Response",
+      "declared_priority": "P1",
+      "candidate_source_ids": "KB-SEC-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": false,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P1",
+        "effective_priority": "P1",
+        "classifier_severity": "P1",
+        "declared_priority": "P1",
+        "classifier_score": 0.4743,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "safety_rule",
+        "team": "Incident Response",
+        "requires_human": true,
+        "review_reasons": [],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Critical contextual rule matched; see exact ticket excerpt.",
+        "evidence": [
+          {
+            "source": "ticket.text (normalised excerpt)",
+            "rule": "SEC-01",
+            "quote": "ransomware note"
+          }
+        ],
+        "similar": [
+          {
+            "id": "INC-HX-01",
+            "title": "Resolved synthetic ransomware drill",
+            "text": "Helix lab ransomware exercise: engineer verified the isolated test scope and captured the timeline. Reuse the diagnostic checklist, never execute changes automatically.",
+            "score": 0.1769,
+            "account_id": "helix",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-HX-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "URGENT — ransomware note on 40 endpoints, files renamed .lockx since 06:12. Declared P1. Account: Helix Logistics (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "helix",
+        "account": "Helix Logistics",
+        "tier": "Enterprise",
+        "sla_minutes": 60,
+        "sla_deadline": "2026-11-15T19:34:07.424189+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.424189+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C02",
+      "reference_severity": "P1",
+      "reference_team": "Incident Response",
+      "declared_priority": "P3",
+      "candidate_source_ids": "KB-SEC-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": false,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P1",
+        "effective_priority": "P1",
+        "classifier_severity": "P4",
+        "declared_priority": "P3",
+        "classifier_score": 0.3555,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "safety_rule",
+        "team": "Incident Response",
+        "requires_human": true,
+        "review_reasons": [
+          "No reusable source found: no troubleshooting suggestion; human review required."
+        ],
+        "lowering_requires_reason": false,
+        "auto_raised": true,
+        "reason": "Critical contextual rule matched; see exact ticket excerpt.",
+        "evidence": [
+          {
+            "source": "ticket.text (normalised excerpt)",
+            "rule": "SEC-02",
+            "quote": "admin console shows a new global admin 'svc-backup2' that nobody"
+          }
+        ],
+        "similar": [],
+        "redacted_text": "Hi team, no rush — our admin console shows a new global admin 'svc-backup2' that nobody here created, added last night. Could you have a look when you can? Declared P3. Account: Helix Logistics (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "helix",
+        "account": "Helix Logistics",
+        "tier": "Enterprise",
+        "sla_minutes": 60,
+        "sla_deadline": "2026-11-15T19:34:07.436846+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.436846+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C03",
+      "reference_severity": "P1",
+      "reference_team": "Incident Response",
+      "declared_priority": "P4",
+      "candidate_source_ids": "KB-SEC-01",
+      "checks": {
+        "severity_agreement": false,
+        "team_agreement": false,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P4",
+        "effective_priority": "P4",
+        "classifier_severity": "P4",
+        "declared_priority": "P4",
+        "classifier_score": 0.3588,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Human triage",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage.",
+          "No supported routing category found."
+        ],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-SEC-01",
+            "title": "Incident response playbook",
+            "text": "Active compromise, ransomware, malicious administrator or data exfiltration: escalate to Incident Response, preserve evidence and follow the approved incident procedure. No automatic remediation.",
+            "score": 0.0867,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-SEC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "INC-OR-01",
+            "title": "Resolved synthetic empty PDF report",
+            "text": "Orion scheduled PDF report was empty after a time-zone change. Manual export worked; correcting the schedule restored it. Confirm the same evidence before applying this fix.",
+            "score": 0.084,
+            "account_id": "orion",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-OR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "Quick question: is it normal that our outbound traffic to [IP-1] went from 2 GB to 140 GB overnight? Nothing seems broken. Declared P4. Account: Orion Retail (Standard).",
+        "redaction": {
+          "count": 1,
+          "types": {
+            "IP": 1
+          }
+        },
+        "account_id": "orion",
+        "account": "Orion Retail",
+        "tier": "Standard",
+        "sla_minutes": 4320,
+        "sla_deadline": "2026-11-18T18:34:07.441417+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.441417+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C04",
+      "reference_severity": "P1",
+      "reference_team": "Identity",
+      "declared_priority": "P2",
+      "candidate_source_ids": "KB-ID-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P1",
+        "effective_priority": "P1",
+        "classifier_severity": "P1",
+        "declared_priority": "P2",
+        "classifier_score": 0.6744,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "safety_rule",
+        "team": "Identity",
+        "requires_human": true,
+        "review_reasons": [],
+        "lowering_requires_reason": false,
+        "auto_raised": true,
+        "reason": "Critical contextual rule matched; see exact ticket excerpt.",
+        "evidence": [
+          {
+            "source": "ticket.text (normalised excerpt)",
+            "rule": "SEC-03",
+            "quote": "plus aucun utilisateur ne peut se connecter"
+          }
+        ],
+        "similar": [
+          {
+            "id": "KB-ID-01",
+            "title": "Identity and SSO diagnosis",
+            "text": "For sign-in failures, SSO loops, directory synchronisation or locked accounts, record scope and timestamps. Identity engineers verify provider status before changing permissions.",
+            "score": 0.1731,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ID-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "INC-AR-01",
+            "title": "Resolved synthetic outdated endpoint status",
+            "text": "Arpege's two lab laptops showed an old agent version. Endpoint engineers checked current protection and restarted the inventory sync after approval.",
+            "score": 0.1062,
+            "account_id": "arpege",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-AR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "Plus aucun utilisateur ne peut se connecter via SSO depuis 08h00, toute l'équipe est bloquée. Déclaré P2. Compte : Banque Arpège (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "arpege",
+        "account": "Banque Arpège",
+        "tier": "Enterprise",
+        "sla_minutes": 60,
+        "sla_deadline": "2026-11-15T19:34:07.446879+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.446879+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C05",
+      "reference_severity": "P1",
+      "reference_team": "Platform",
+      "declared_priority": "P2",
+      "candidate_source_ids": "KB-EDR-01|KB-PLT-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P1",
+        "effective_priority": "P1",
+        "classifier_severity": "P1",
+        "declared_priority": "P2",
+        "classifier_score": 0.5393,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "safety_rule",
+        "team": "Platform",
+        "requires_human": true,
+        "review_reasons": [],
+        "lowering_requires_reason": false,
+        "auto_raised": true,
+        "reason": "Critical contextual rule matched; see exact ticket excerpt.",
+        "evidence": [
+          {
+            "source": "ticket.text (normalised excerpt)",
+            "rule": "SEC-04",
+            "quote": "edr agents stopped reporting on all"
+          }
+        ],
+        "similar": [
+          {
+            "id": "KB-EDR-01",
+            "title": "Endpoint reporting and outdated agents",
+            "text": "Check last heartbeat, deployed version and policy status for the affected laptops. An outdated label alone does not prove protection is disabled. Whole-fleet failure requires urgent investigation.",
+            "score": 0.1421,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-EDR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "Our EDR agents stopped reporting on all 1,200 hosts at 02:40. Dashboard says last seen 5 h ago. Declared P2. Account: Helix Logistics (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "helix",
+        "account": "Helix Logistics",
+        "tier": "Enterprise",
+        "sla_minutes": 60,
+        "sla_deadline": "2026-11-15T19:34:07.448897+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.448897+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C06",
+      "reference_severity": "P1",
+      "reference_team": "Platform",
+      "declared_priority": "P3",
+      "candidate_source_ids": "KB-PLT-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P1",
+        "effective_priority": "P3",
+        "classifier_severity": "P1",
+        "declared_priority": "P3",
+        "classifier_score": 0.2684,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Platform",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage."
+        ],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "INC-OR-01",
+            "title": "Resolved synthetic empty PDF report",
+            "text": "Orion scheduled PDF report was empty after a time-zone change. Manual export worked; correcting the schedule restored it. Confirm the same evidence before applying this fix.",
+            "score": 0.1203,
+            "account_id": "orion",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-OR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-PLT-01",
+            "title": "Console performance and monitoring",
+            "text": "Record affected pages, duration, tenant scope and whether alert delivery still works. Do not infer absence of compromise from a slow dashboard alone.",
+            "score": 0.1052,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-PLT-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-ACC-01",
+            "title": "Account and user administration",
+            "text": "Use the documented user and role-management screen for routine requests. Privileged access changes require identity verification by an engineer.",
+            "score": 0.0835,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ACC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "detectoin alerts not arriving since update?? we had a phishing campaing this morning and see nothing in the console. Declared P3. Account: Orion Retail (Standard).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "orion",
+        "account": "Orion Retail",
+        "tier": "Standard",
+        "sla_minutes": 1440,
+        "sla_deadline": "2026-11-16T18:34:07.450913+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.450913+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C07",
+      "reference_severity": "P2",
+      "reference_team": "Awareness module",
+      "declared_priority": "P2",
+      "candidate_source_ids": "KB-AWR-01",
+      "checks": {
+        "severity_agreement": false,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P4",
+        "effective_priority": "P2",
+        "classifier_severity": "P4",
+        "declared_priority": "P2",
+        "classifier_score": 0.4777,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Awareness module",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage."
+        ],
+        "lowering_requires_reason": true,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-AWR-01",
+            "title": "Awareness campaign failures",
+            "text": "Record campaign size and failure response. The phishing simulation module is separate from live protection. Check whether campaigns fail at a repeatable audience size.",
+            "score": 0.3683,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-AWR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-ACC-01",
+            "title": "Account and user administration",
+            "text": "Use the documented user and role-management screen for routine requests. Privileged access changes require identity verification by an engineer.",
+            "score": 0.0836,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ACC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "The phishing-simulation module crashes when we launch a campaign for more than 500 users. Declared P2. Account: Banque Arpège (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "arpege",
+        "account": "Banque Arpège",
+        "tier": "Enterprise",
+        "sla_minutes": 240,
+        "sla_deadline": "2026-11-15T22:34:07.452678+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.452678+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C08",
+      "reference_severity": "P1",
+      "reference_team": "Detection Engineering",
+      "declared_priority": "P1",
+      "candidate_source_ids": "KB-DET-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": false,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P1",
+        "effective_priority": "P1",
+        "classifier_severity": "P1",
+        "declared_priority": "P1",
+        "classifier_score": 0.4799,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Detection Engineering",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage.",
+          "No reusable source found: no troubleshooting suggestion; human review required."
+        ],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [],
+        "redacted_text": "Your last signature update quarantines our ERP executable on 300 machines — production planning has stopped. Declared P1. Account: Helix Logistics (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "helix",
+        "account": "Helix Logistics",
+        "tier": "Enterprise",
+        "sla_minutes": 60,
+        "sla_deadline": "2026-11-15T19:34:07.452678+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.452678+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C09",
+      "reference_severity": "P2",
+      "reference_team": "Platform",
+      "declared_priority": "P2",
+      "candidate_source_ids": "KB-PLT-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": false,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P2",
+        "effective_priority": "P2",
+        "classifier_severity": "P2",
+        "declared_priority": "P2",
+        "classifier_score": 0.7325,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Reporting",
+        "requires_human": true,
+        "review_reasons": [],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-REP-01",
+            "title": "Reports and PDF export",
+            "text": "For empty scheduled reports, inspect schedule and time zone, compare manual export and preserve the error. Use the manual export workaround if it works.",
+            "score": 0.1096,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-REP-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-PLT-01",
+            "title": "Console performance and monitoring",
+            "text": "Record affected pages, duration, tenant scope and whether alert delivery still works. Do not infer absence of compromise from a slow dashboard alone.",
+            "score": 0.1049,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-PLT-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "INC-OR-01",
+            "title": "Resolved synthetic empty PDF report",
+            "text": "Orion scheduled PDF report was empty after a time-zone change. Manual export worked; correcting the schedule restored it. Confirm the same evidence before applying this fix.",
+            "score": 0.0926,
+            "account_id": "orion",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-OR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "Reports page times out for all users in our EU tenant since this morning; alerts still arrive normally. Declared P2. Account: Orion Retail (Standard).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "orion",
+        "account": "Orion Retail",
+        "tier": "Standard",
+        "sla_minutes": 240,
+        "sla_deadline": "2026-11-15T22:34:07.452678+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.452678+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C10",
+      "reference_severity": "P2",
+      "reference_team": "Identity",
+      "declared_priority": "P3",
+      "candidate_source_ids": "KB-ID-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P2",
+        "effective_priority": "P2",
+        "classifier_severity": "P2",
+        "declared_priority": "P3",
+        "classifier_score": 0.7429,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Identity",
+        "requires_human": true,
+        "review_reasons": [],
+        "lowering_requires_reason": false,
+        "auto_raised": true,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-ID-01",
+            "title": "Identity and SSO diagnosis",
+            "text": "For sign-in failures, SSO loops, directory synchronisation or locked accounts, record scope and timestamps. Identity engineers verify provider status before changing permissions.",
+            "score": 0.1348,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ID-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "INC-AR-01",
+            "title": "Resolved synthetic outdated endpoint status",
+            "text": "Arpege's two lab laptops showed an old agent version. Endpoint engineers checked current protection and restarted the inventory sync after approval.",
+            "score": 0.1121,
+            "account_id": "arpege",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-AR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "La synchronisation avec notre Active Directory échoue depuis hier, les nouveaux employés n'ont pas de protection. Déclaré P3. Compte : Banque Arpège (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "arpege",
+        "account": "Banque Arpège",
+        "tier": "Enterprise",
+        "sla_minutes": 240,
+        "sla_deadline": "2026-11-15T22:34:07.461039+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.461039+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C11",
+      "reference_severity": "P3",
+      "reference_team": "Reporting",
+      "declared_priority": "P3",
+      "candidate_source_ids": "KB-REP-01|INC-OR-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P3",
+        "effective_priority": "P3",
+        "classifier_severity": "P3",
+        "declared_priority": "P3",
+        "classifier_score": 0.7125,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Reporting",
+        "requires_human": false,
+        "review_reasons": [],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "INC-OR-01",
+            "title": "Resolved synthetic empty PDF report",
+            "text": "Orion scheduled PDF report was empty after a time-zone change. Manual export worked; correcting the schedule restored it. Confirm the same evidence before applying this fix.",
+            "score": 0.4089,
+            "account_id": "orion",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-OR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-REP-01",
+            "title": "Reports and PDF export",
+            "text": "For empty scheduled reports, inspect schedule and time zone, compare manual export and preserve the error. Use the manual export workaround if it works.",
+            "score": 0.2342,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-REP-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "The scheduled weekly PDF report arrives empty; we can export it manually in the meantime. Declared P3. Account: Orion Retail (Standard).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "orion",
+        "account": "Orion Retail",
+        "tier": "Standard",
+        "sla_minutes": 1440,
+        "sla_deadline": "2026-11-16T18:34:07.463235+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.463235+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C12",
+      "reference_severity": "P3",
+      "reference_team": "Endpoint",
+      "declared_priority": "P2",
+      "candidate_source_ids": "KB-EDR-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P3",
+        "effective_priority": "P2",
+        "classifier_severity": "P3",
+        "declared_priority": "P2",
+        "classifier_score": 0.7212,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Endpoint",
+        "requires_human": true,
+        "review_reasons": [],
+        "lowering_requires_reason": true,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-EDR-01",
+            "title": "Endpoint reporting and outdated agents",
+            "text": "Check last heartbeat, deployed version and policy status for the affected laptops. An outdated label alone does not prove protection is disabled. Whole-fleet failure requires urgent investigation.",
+            "score": 0.0946,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-EDR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-PLT-01",
+            "title": "Console performance and monitoring",
+            "text": "Record affected pages, duration, tenant scope and whether alert delivery still works. Do not infer absence of compromise from a slow dashboard alone.",
+            "score": 0.0934,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-PLT-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "Two of our 800 laptops still show 'agent outdated' after a reboot. Declared P2. Account: Helix Logistics (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "helix",
+        "account": "Helix Logistics",
+        "tier": "Enterprise",
+        "sla_minutes": 240,
+        "sla_deadline": "2026-11-15T22:34:07.465256+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.465256+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C13",
+      "reference_severity": "P3",
+      "reference_team": "Detection Engineering",
+      "declared_priority": "P2",
+      "candidate_source_ids": "KB-DET-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P3",
+        "effective_priority": "P2",
+        "classifier_severity": "P3",
+        "declared_priority": "P2",
+        "classifier_score": 0.7687,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Detection Engineering",
+        "requires_human": true,
+        "review_reasons": [],
+        "lowering_requires_reason": true,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "INC-OR-01",
+            "title": "Resolved synthetic empty PDF report",
+            "text": "Orion scheduled PDF report was empty after a time-zone change. Manual export worked; correcting the schedule restored it. Confirm the same evidence before applying this fix.",
+            "score": 0.2101,
+            "account_id": "orion",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-OR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-DET-01",
+            "title": "Detection rules and false positives",
+            "text": "Record signature version, test file and scope. A false positive blocking all business operations is different from a lab-only test. Only an engineer approves exclusions.",
+            "score": 0.204,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-DET-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-REP-01",
+            "title": "Reports and PDF export",
+            "text": "For empty scheduled reports, inspect schedule and time zone, compare manual export and preserve the error. Use the manual export workaround if it works.",
+            "score": 0.0931,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-REP-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "This is the THIRD time I ask: the custom detection rule I wrote doesn't trigger on my test file. Fix it. Declared P2. Account: Orion Retail (Standard).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "orion",
+        "account": "Orion Retail",
+        "tier": "Standard",
+        "sla_minutes": 240,
+        "sla_deadline": "2026-11-15T22:34:07.469289+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.469289+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C14",
+      "reference_severity": "P3",
+      "reference_team": "Integrations",
+      "declared_priority": "P3",
+      "candidate_source_ids": "KB-INT-01",
+      "checks": {
+        "severity_agreement": false,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P4",
+        "effective_priority": "P3",
+        "classifier_severity": "P4",
+        "declared_priority": "P3",
+        "classifier_score": 0.4608,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Integrations",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage."
+        ],
+        "lowering_requires_reason": true,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-INT-01",
+            "title": "SIEM and webhook replay",
+            "text": "Inspect delivery error codes and retry backlog. Compare source counts with received events. Check whether replay can recover missing events before changing connector configuration.",
+            "score": 0.1615,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-INT-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "Our webhook to the SIEM drops about 2 % of events; we see small gaps in the timeline. Declared P3. Account: Banque Arpège (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "arpege",
+        "account": "Banque Arpège",
+        "tier": "Enterprise",
+        "sla_minutes": 1440,
+        "sla_deadline": "2026-11-16T18:34:07.471306+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.471306+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C15",
+      "reference_severity": "P4",
+      "reference_team": "Customer Success",
+      "declared_priority": "P4",
+      "candidate_source_ids": "KB-ACC-01|KB-REP-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": false,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P4",
+        "effective_priority": "P4",
+        "classifier_severity": "P4",
+        "declared_priority": "P4",
+        "classifier_score": 0.4464,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Platform",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage."
+        ],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-PLT-01",
+            "title": "Console performance and monitoring",
+            "text": "Record affected pages, duration, tenant scope and whether alert delivery still works. Do not infer absence of compromise from a slow dashboard alone.",
+            "score": 0.1592,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-PLT-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "INC-HX-01",
+            "title": "Resolved synthetic ransomware drill",
+            "text": "Helix lab ransomware exercise: engineer verified the isolated test scope and captured the timeline. Reuse the diagnostic checklist, never execute changes automatically.",
+            "score": 0.0903,
+            "account_id": "helix",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-HX-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-ACC-01",
+            "title": "Account and user administration",
+            "text": "Use the documented user and role-management screen for routine requests. Privileged access changes require identity verification by an engineer.",
+            "score": 0.084,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ACC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "How do I add a new admin, and also why does the dashboard show UTC instead of Paris time? Declared P4. Account: Helix Logistics (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "helix",
+        "account": "Helix Logistics",
+        "tier": "Enterprise",
+        "sla_minutes": 4320,
+        "sla_deadline": "2026-11-18T18:34:07.473323+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.473323+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C16",
+      "reference_severity": "P4",
+      "reference_team": "Account Management",
+      "declared_priority": "P4",
+      "candidate_source_ids": "KB-CMP-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P4",
+        "effective_priority": "P4",
+        "classifier_severity": "P4",
+        "declared_priority": "P4",
+        "classifier_score": 0.8862,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Account Management",
+        "requires_human": false,
+        "review_reasons": [],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-CMP-01",
+            "title": "Compliance documentation",
+            "text": "The synthetic compliance portal contains certificate and audit-document downloads. A certificate request is a documentation task, not proof of a security incident.",
+            "score": 0.1233,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-CMP-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-ACC-01",
+            "title": "Account and user administration",
+            "text": "Use the documented user and role-management screen for routine requests. Privileged access changes require identity verification by an engineer.",
+            "score": 0.1084,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ACC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "Where can I download your ISO 27001 certificate for our auditor? Declared P4. Account: Orion Retail (Standard).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "orion",
+        "account": "Orion Retail",
+        "tier": "Standard",
+        "sla_minutes": 4320,
+        "sla_deadline": "2026-11-18T18:34:07.479072+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.479072+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C17",
+      "reference_severity": "P4",
+      "reference_team": "Customer Success",
+      "declared_priority": "P3",
+      "candidate_source_ids": "KB-REP-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": false,
+        "candidate_source_hit": false,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P4",
+        "effective_priority": "P3",
+        "classifier_severity": "P4",
+        "declared_priority": "P3",
+        "classifier_score": 0.8187,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Reporting",
+        "requires_human": true,
+        "review_reasons": [],
+        "lowering_requires_reason": true,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-ACC-01",
+            "title": "Account and user administration",
+            "text": "Use the documented user and role-management screen for routine requests. Privileged access changes require identity verification by an engineer.",
+            "score": 0.0871,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ACC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "INC-AR-01",
+            "title": "Resolved synthetic outdated endpoint status",
+            "text": "Arpege's two lab laptops showed an old agent version. Endpoint engineers checked current protection and restarted the inventory sync after approval.",
+            "score": 0.0851,
+            "account_id": "arpege",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-AR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "Can we change the logo on the weekly report? Declared P3. Account: Banque Arpège (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "arpege",
+        "account": "Banque Arpège",
+        "tier": "Enterprise",
+        "sla_minutes": 1440,
+        "sla_deadline": "2026-11-16T18:34:07.479072+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.479072+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C18",
+      "reference_severity": "P1",
+      "reference_team": "Incident Response",
+      "declared_priority": "P1",
+      "candidate_source_ids": "KB-SEC-01",
+      "checks": {
+        "severity_agreement": false,
+        "team_agreement": false,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P4",
+        "effective_priority": "P1",
+        "classifier_severity": "P4",
+        "declared_priority": "P1",
+        "classifier_score": 0.4364,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Human triage",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage.",
+          "No supported routing category found.",
+          "Privileged change or legal question: human-only handling; no action or legal answer."
+        ],
+        "lowering_requires_reason": true,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "KB-SEC-01",
+            "title": "Incident response playbook",
+            "text": "Active compromise, ransomware, malicious administrator or data exfiltration: escalate to Incident Response, preserve evidence and follow the approved incident procedure. No automatic remediation.",
+            "score": 0.1304,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-SEC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-ACC-01",
+            "title": "Account and user administration",
+            "text": "Use the documented user and role-management screen for routine requests. Privileged access changes require identity verification by an engineer.",
+            "score": 0.1167,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ACC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "INC-HX-01",
+            "title": "Resolved synthetic ransomware drill",
+            "text": "Helix lab ransomware exercise: engineer verified the isolated test scope and captured the timeline. Reuse the diagnostic checklist, never execute changes automatically.",
+            "score": 0.1027,
+            "account_id": "helix",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-HX-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "We think we had a data breach. Do we have to notify the CNIL within 72 hours, and can you write the notification for us? Declared P1. Account: Helix Logistics (Enterprise).",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "helix",
+        "account": "Helix Logistics",
+        "tier": "Enterprise",
+        "sla_minutes": 60,
+        "sla_deadline": "2026-11-15T19:34:07.479072+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.479072+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C19",
+      "reference_severity": "P2",
+      "reference_team": "Identity",
+      "declared_priority": "P1",
+      "candidate_source_ids": "KB-ACC-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": false,
+        "candidate_source_hit": true,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P2",
+        "effective_priority": "P1",
+        "classifier_severity": "P2",
+        "declared_priority": "P1",
+        "classifier_score": 0.3289,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Human triage",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage.",
+          "No supported routing category found.",
+          "Privileged change or legal question: human-only handling; no action or legal answer."
+        ],
+        "lowering_requires_reason": true,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "INC-OR-01",
+            "title": "Resolved synthetic empty PDF report",
+            "text": "Orion scheduled PDF report was empty after a time-zone change. Manual export worked; correcting the schedule restored it. Confirm the same evidence before applying this fix.",
+            "score": 0.1235,
+            "account_id": "orion",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-OR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-AWR-01",
+            "title": "Awareness campaign failures",
+            "text": "Record campaign size and failure response. The phishing simulation module is separate from live protection. Check whether campaigns fail at a repeatable audience size.",
+            "score": 0.0908,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-AWR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-ACC-01",
+            "title": "Account and user administration",
+            "text": "Use the documented user and role-management screen for routine requests. Privileged access changes require identity verification by an engineer.",
+            "score": 0.0867,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ACC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "I'm the new CISO at Orion Retail. Disable MFA for all our users today, it's blocking the board meeting. Call me at [PHONE-1]. Declared P1. Account: Orion Retail (Standard).",
+        "redaction": {
+          "count": 1,
+          "types": {
+            "PHONE": 1
+          }
+        },
+        "account_id": "orion",
+        "account": "Orion Retail",
+        "tier": "Standard",
+        "sla_minutes": 60,
+        "sla_deadline": "2026-11-15T19:34:07.486545+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.486545+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    },
+    {
+      "case_id": "C20",
+      "reference_severity": "P3",
+      "reference_team": "Network",
+      "declared_priority": "P3",
+      "candidate_source_ids": "KB-NET-01",
+      "checks": {
+        "severity_agreement": true,
+        "team_agreement": true,
+        "candidate_source_hit": false,
+        "never_lower": true,
+        "customer_isolation": true
+      },
+      "actual_output": {
+        "proposed_severity": "P3",
+        "effective_priority": "P3",
+        "classifier_severity": "P3",
+        "declared_priority": "P3",
+        "classifier_score": 0.276,
+        "score_note": "Uncalibrated model score from synthetic training; not a measured probability of correctness.",
+        "method": "tfidf_logistic_regression",
+        "team": "Network",
+        "requires_human": true,
+        "review_reasons": [
+          "Classifier score below 0.70; an engineer must triage."
+        ],
+        "lowering_requires_reason": false,
+        "auto_raised": false,
+        "reason": "Local classifier recommendation; engineer verification required.",
+        "evidence": [],
+        "similar": [
+          {
+            "id": "INC-OR-01",
+            "title": "Resolved synthetic empty PDF report",
+            "text": "Orion scheduled PDF report was empty after a time-zone change. Manual export worked; correcting the schedule restored it. Confirm the same evidence before applying this fix.",
+            "score": 0.112,
+            "account_id": "orion",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#INC-OR-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-ACC-01",
+            "title": "Account and user administration",
+            "text": "Use the documented user and role-management screen for routine requests. Privileged access changes require identity verification by an engineer.",
+            "score": 0.0939,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-ACC-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          },
+          {
+            "id": "KB-DET-01",
+            "title": "Detection rules and false positives",
+            "text": "Record signature version, test file and scope. A false positive blocking all business operations is different from a lab-only test. Only an engineer approves exclusions.",
+            "score": 0.0839,
+            "account_id": "*",
+            "version": "synthetic-v1",
+            "source": "prototype/data/knowledge_base.json#KB-DET-01",
+            "review_status": "SIMULATED sign-off fixture, not a real engineer approval"
+          }
+        ],
+        "redacted_text": "VPN client disconnects every 10 minutes for remote staff. Declared P3. Account: Orion Retail (Standard). The only past case on this topic belongs to Helix Logistics.",
+        "redaction": {
+          "count": 0,
+          "types": {}
+        },
+        "account_id": "orion",
+        "account": "Orion Retail",
+        "tier": "Standard",
+        "sla_minutes": 1440,
+        "sla_deadline": "2026-11-16T18:34:07.489890+00:00",
+        "contract_verified": true,
+        "created_at": "2026-11-15T18:34:07.489890+00:00",
+        "mode": "assisted",
+        "model_version": "41acde6fcf51b4c1"
+      },
+      "grade_source": "automatic comparison to adapted demo reference; NOT human grading"
+    }
+  ]
+}

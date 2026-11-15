@@ -2,6 +2,8 @@
 
 **Team:** Luna, Malek, Jane · **Starting point:** P7 · Cybersecurity SaaS · **Version:** v2 
 
+> **S4 implementation note - 12 November 2026:** actual code/data are described in `04_architecture.md` and `spec.md` v2. Current training has 300 synthetic rows (P1 70 / P2 75 / P3 90 / P4 65), with AI-proposed labels pending human review; source reuse sign-off is simulated. The new 50 evaluation INPUTS are not yet human-labelled or graded. S3 timings and the 62% acceptance-to-time-saving conversion remain hypotheses. The local default is suggestions-only; assisted raises are opt-in. Earlier planned data/model claims below are not measured results.
+
 ## 1. Problem, user, do-nothing  *(from 01)*
 - **Problem in one sentence :** our 25 support engineers spend about 12 of the 33 minutes a ticket takes on triage (reading, severity, searching past incidents, routing), and we breach about 240 SLAs a year at ~€2,000 each, partly because a critical ticket written in a calm tone gets the wrong priority.
 - **User (persona):** L2 support engineer — goal: put each of ~240 tickets a month in the right queue at the right severity before the SLA clock runs out — pain: has to read raw logs and search old tickets by hand before even knowing how urgent a ticket is.
@@ -60,7 +62,7 @@ No real tickets: the eval-set is AI-generated from public material (public statu
 | The MVP | 4 · hybrid | each part on its own rung; no LLM needed in v0, so no log leaves our perimeter |
 
 ## 6. Where it lives (integration surface)
-A side panel inside the ticketing console the engineers already use — no new tool. Speed: triage shown under 30 s after the ticket arrives (P1 SLA = 1 h). Format: severity badge + confidence + one-line reason + SLA countdown + top-3 similar tickets. **Confidence** = the severity classifier's probability for the proposed priority, i.e. how often that priority was right on similar past tickets: High ≥ 80 %, Medium 70–80 %, Low < 70 % (below 70 % the agent does not guess and an engineer triages). In the prototype the value is illustrative. Fallback: if the agent is down, tickets flow as today with the customer-declared priority. Log: every agent decision with its reason, visible to the support lead and auditable in a penalty dispute.
+A side panel inside the ticketing console the engineers already use — no new tool. Speed: triage shown under 30 s after the ticket arrives (P1 SLA = 1 h). Format: severity badge + confidence + one-line reason + SLA countdown + top-3 similar tickets. **Confidence** = the severity classifier's probability for the proposed priority, an uncalibrated model output, not a measured probability of correctness: High ≥ 80 %, Medium 70–80 %, Low < 70 % (below 70 % the agent does not guess and an engineer triages). In the prototype the value is illustrative. Fallback: if the agent is down, tickets flow as today with the customer-declared priority. Log: every agent decision with its reason, visible to the support lead and auditable in a penalty dispute.
 
 ## 7. Success criterion — one sentence
 > On our eval-set (20 cases now, 200 by then), at least **62 % of P3/P4 tickets** get a triage — severity, team and at least one relevant resolved ticket — that two graders would accept without changing anything, **and no P1 is proposed below P1**.

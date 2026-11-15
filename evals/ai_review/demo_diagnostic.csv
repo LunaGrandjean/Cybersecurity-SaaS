@@ -1,0 +1,21 @@
+case_id,reference_severity,actual_severity,declared_priority,effective_priority,reference_team,actual_team,severity_agreement,team_agreement,candidate_source_hit,never_lower,customer_isolation,review_required,review_reasons,grade_source
+C01,P1,P1,P1,P1,Incident Response,Incident Response,True,True,False,True,True,True,,automatic comparison to adapted demo reference; NOT human grading
+C02,P1,P1,P3,P1,Incident Response,Incident Response,True,True,False,True,True,True,No reusable source found: no troubleshooting suggestion; human review required.,automatic comparison to adapted demo reference; NOT human grading
+C03,P1,P4,P4,P4,Incident Response,Human triage,False,False,True,True,True,True,Classifier score below 0.70; an engineer must triage. | No supported routing category found.,automatic comparison to adapted demo reference; NOT human grading
+C04,P1,P1,P2,P1,Identity,Identity,True,True,True,True,True,True,,automatic comparison to adapted demo reference; NOT human grading
+C05,P1,P1,P2,P1,Platform,Platform,True,True,True,True,True,True,,automatic comparison to adapted demo reference; NOT human grading
+C06,P1,P1,P3,P3,Platform,Platform,True,True,True,True,True,True,Classifier score below 0.70; an engineer must triage.,automatic comparison to adapted demo reference; NOT human grading
+C07,P2,P4,P2,P2,Awareness module,Awareness module,False,True,True,True,True,True,Classifier score below 0.70; an engineer must triage.,automatic comparison to adapted demo reference; NOT human grading
+C08,P1,P1,P1,P1,Detection Engineering,Detection Engineering,True,True,False,True,True,True,Classifier score below 0.70; an engineer must triage. | No reusable source found: no troubleshooting suggestion; human review required.,automatic comparison to adapted demo reference; NOT human grading
+C09,P2,P2,P2,P2,Platform,Reporting,True,False,True,True,True,True,,automatic comparison to adapted demo reference; NOT human grading
+C10,P2,P2,P3,P2,Identity,Identity,True,True,True,True,True,True,,automatic comparison to adapted demo reference; NOT human grading
+C11,P3,P3,P3,P3,Reporting,Reporting,True,True,True,True,True,False,,automatic comparison to adapted demo reference; NOT human grading
+C12,P3,P3,P2,P2,Endpoint,Endpoint,True,True,True,True,True,True,,automatic comparison to adapted demo reference; NOT human grading
+C13,P3,P3,P2,P2,Detection Engineering,Detection Engineering,True,True,True,True,True,True,,automatic comparison to adapted demo reference; NOT human grading
+C14,P3,P4,P3,P3,Integrations,Integrations,False,True,True,True,True,True,Classifier score below 0.70; an engineer must triage.,automatic comparison to adapted demo reference; NOT human grading
+C15,P4,P4,P4,P4,Customer Success,Platform,True,False,True,True,True,True,Classifier score below 0.70; an engineer must triage.,automatic comparison to adapted demo reference; NOT human grading
+C16,P4,P4,P4,P4,Account Management,Account Management,True,True,True,True,True,False,,automatic comparison to adapted demo reference; NOT human grading
+C17,P4,P4,P3,P3,Customer Success,Reporting,True,False,False,True,True,True,,automatic comparison to adapted demo reference; NOT human grading
+C18,P1,P4,P1,P1,Incident Response,Human triage,False,False,True,True,True,True,Classifier score below 0.70; an engineer must triage. | No supported routing category found. | Privileged change or legal question: human-only handling; no action or legal answer.,automatic comparison to adapted demo reference; NOT human grading
+C19,P2,P2,P1,P1,Identity,Human triage,True,False,True,True,True,True,Classifier score below 0.70; an engineer must triage. | No supported routing category found. | Privileged change or legal question: human-only handling; no action or legal answer.,automatic comparison to adapted demo reference; NOT human grading
+C20,P3,P3,P3,P3,Network,Network,True,True,False,True,True,True,Classifier score below 0.70; an engineer must triage.,automatic comparison to adapted demo reference; NOT human grading

@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Unknown administrator",
+    "account_id": "helix",
+    "declared_priority": "P3",
+    "language": "en",
+    "text": "No rush: an unknown privileged administrator was created last night. Contact analyst@example.com; source 198.51.100.25.",
+    "opened_minutes": 8
+  },
+  {
+    "title": "Slow dashboard — impact unknown",
+    "account_id": "nordwind",
+    "declared_priority": "P3",
+    "language": "en",
+    "text": "The dashboard is slow. The alerts page too. We have not checked who else is affected.",
+    "opened_minutes": 25
+  },
+  {
+    "title": "Empty scheduled report",
+    "account_id": "orion",
+    "declared_priority": "P3",
+    "language": "en",
+    "text": "The weekly PDF report is empty. Manual export works as a workaround.",
+    "opened_minutes": 95
+  },
+  {
+    "title": "Outdated endpoint status",
+    "account_id": "arpege",
+    "declared_priority": "P2",
+    "language": "en",
+    "text": "Two laptops show agent outdated. Both devices are protected and all other devices are current.",
+    "opened_minutes": 40
+  },
+  {
+    "title": "Phishing campaign failure",
+    "account_id": "arpege",
+    "declared_priority": "P2",
+    "language": "en",
+    "text": "The phishing simulation module fails for large campaigns. Live threat protection works normally.",
+    "opened_minutes": 70
+  },
+  {
+    "title": "Certificate request",
+    "account_id": "orion",
+    "declared_priority": "P4",
+    "language": "en",
+    "text": "Where can I download your ISO 27001 certificate for our auditor?",
+    "opened_minutes": 300
+  }
+]

@@ -1,0 +1,165 @@
+[
+  {
+    "case_id": "C01",
+    "reference_severity": "P1",
+    "reference_team": "Incident Response",
+    "candidate_source_ids": [
+      "KB-SEC-01"
+    ]
+  },
+  {
+    "case_id": "C02",
+    "reference_severity": "P1",
+    "reference_team": "Incident Response",
+    "candidate_source_ids": [
+      "KB-SEC-01"
+    ]
+  },
+  {
+    "case_id": "C03",
+    "reference_severity": "P1",
+    "reference_team": "Incident Response",
+    "candidate_source_ids": [
+      "KB-SEC-01"
+    ]
+  },
+  {
+    "case_id": "C04",
+    "reference_severity": "P1",
+    "reference_team": "Identity",
+    "candidate_source_ids": [
+      "KB-ID-01"
+    ]
+  },
+  {
+    "case_id": "C05",
+    "reference_severity": "P1",
+    "reference_team": "Platform",
+    "candidate_source_ids": [
+      "KB-EDR-01",
+      "KB-PLT-01"
+    ]
+  },
+  {
+    "case_id": "C06",
+    "reference_severity": "P1",
+    "reference_team": "Platform",
+    "candidate_source_ids": [
+      "KB-PLT-01"
+    ]
+  },
+  {
+    "case_id": "C07",
+    "reference_severity": "P2",
+    "reference_team": "Awareness module",
+    "candidate_source_ids": [
+      "KB-AWR-01"
+    ]
+  },
+  {
+    "case_id": "C08",
+    "reference_severity": "P1",
+    "reference_team": "Detection Engineering",
+    "candidate_source_ids": [
+      "KB-DET-01"
+    ]
+  },
+  {
+    "case_id": "C09",
+    "reference_severity": "P2",
+    "reference_team": "Platform",
+    "candidate_source_ids": [
+      "KB-PLT-01"
+    ]
+  },
+  {
+    "case_id": "C10",
+    "reference_severity": "P2",
+    "reference_team": "Identity",
+    "candidate_source_ids": [
+      "KB-ID-01"
+    ]
+  },
+  {
+    "case_id": "C11",
+    "reference_severity": "P3",
+    "reference_team": "Reporting",
+    "candidate_source_ids": [
+      "KB-REP-01",
+      "INC-OR-01"
+    ]
+  },
+  {
+    "case_id": "C12",
+    "reference_severity": "P3",
+    "reference_team": "Endpoint",
+    "candidate_source_ids": [
+      "KB-EDR-01"
+    ]
+  },
+  {
+    "case_id": "C13",
+    "reference_severity": "P3",
+    "reference_team": "Detection Engineering",
+    "candidate_source_ids": [
+      "KB-DET-01"
+    ]
+  },
+  {
+    "case_id": "C14",
+    "reference_severity": "P3",
+    "reference_team": "Integrations",
+    "candidate_source_ids": [
+      "KB-INT-01"
+    ]
+  },
+  {
+    "case_id": "C15",
+    "reference_severity": "P4",
+    "reference_team": "Customer Success",
+    "candidate_source_ids": [
+      "KB-ACC-01",
+      "KB-REP-01"
+    ]
+  },
+  {
+    "case_id": "C16",
+    "reference_severity": "P4",
+    "reference_team": "Account Management",
+    "candidate_source_ids": [
+      "KB-CMP-01"
+    ]
+  },
+  {
+    "case_id": "C17",
+    "reference_severity": "P4",
+    "reference_team": "Customer Success",
+    "candidate_source_ids": [
+      "KB-REP-01"
+    ]
+  },
+  {
+    "case_id": "C18",
+    "reference_severity": "P1",
+    "reference_team": "Incident Response",
+    "candidate_source_ids": [
+      "KB-SEC-01"
+    ]
+  },
+  {
+    "case_id": "C19",
+    "reference_severity": "P2",
+    "reference_team": "Identity",
+    "candidate_source_ids": [
+      "KB-ACC-01"
+    ]
+  },
+  {
+    "case_id": "C20",
+    "reference_severity": "P3",
+    "reference_team": "Network",
+    "candidate_source_ids": [
+      "KB-NET-01"
+    ]
+  }
+]

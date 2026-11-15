@@ -26,18 +26,30 @@ One numbered file per session. Every member authors commits in at least four of 
 |---|---|---|
 | `00_pitch.md` | before S3 — only if you bring your own idea | — not applicable (official proposal P7) |
 | `01_problem_statement.md` | S1–S2 — Assignment 1 | done |
-| `governance.md` | created for Assignment 1, one line added every session | Sessions 1–3 |
-| `02_sizing.xlsx` | S2 — Assignment 2 | done — conditional go |
+| `governance.md` | created for Assignment 1, one line added every session | Sessions 1–4; team sign-off pending |
+| `02_sizing_CyberSaas.xlsx` | S2 — Assignment 2 | done — conditional go |
 | `02_investment_memo.md` | S2 — Assignment 2 | done |
 | `03_product_brief.md` | S3 | done - v2 — with `03_ai_lean_canvas.md`, `03_user_research.md`, `03_prototype_link.md` |
-| `04_architecture.md` | S4 | Assignment 4 — due 15 Nov |
+| `04_architecture.md` | S4 | implemented v0.4; independent evaluation pending |
 | `05_metrics.md` | S5 | Assignment 5 — due 22 Nov |
 | `06_ab_protocol.md` | S6 | to do |
 | `07_operations.md` | S7 | to do |
 | `08_launch_memo.md` | S8 | to do |
-| `spec.md`, `product_brief.md` | final | `spec.md` skeleton v0 (S3) — v2 in Assignment 4 · `product_brief.md` at S8 |
-| `/prototype`, `/evals` | from S4 | `evals/eval_set_v0.csv`: 20 labelled cases (50 in Assignment 4) · `/prototype`: Assignment 4 |
+| `spec.md`, `product_brief.md` | final | `spec.md` v2 (S4), post-eval misses pending; `product_brief.md` at S8 |
+| `/prototype`, `/evals` | from S4 | 300 synthetic training rows, 50 unlabelled eval inputs, functional local console |
 
 ## Rules
 - Commit with your own Git account: the individual question at the oral is about a commit you signed.
 - Tag the final version `v1.0` before the first oral of your cohort. No commits after the first oral starts.
+
+## Run the S4 prototype
+From this repository root:
+```powershell
+uv run --python 3.12 python -m prototype.server
+```
+Open http://127.0.0.1:8765. Default: suggestions-only, synthetic data, no external inference or customer action.
+See [run and evaluation instructions](prototype/README.md), [architecture](04_architecture.md), [pending eval report](evals/report_v0.md) and [team handoff checklist](S4_CHECKLIST.md).
+
+15 November technical correction: 29 engineering tests and 16 real-browser checks passed. Exposed-demo misses were corrected with the original diagnostic preserved; this is not an independent performance result. [Instructions pour Jane, Malek et Luna](evals/VALIDATION_EQUIPE.md) cover the actual 50-label review, guarded import and subsequent two-person grading.
+
+Training labels are AI-proposed pending review. Holdout labels and two independent human grades must be completed before a product-performance claim. No measured handling-time saving is available yet.

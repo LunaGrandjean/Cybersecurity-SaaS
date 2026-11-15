@@ -45,7 +45,37 @@
 | 5. Diagnose and fix | person only | long reasoning, physical consequences on the client's systems |
 | 6. Customer update | person only (draft is a COULD) | a wrong statement to an enterprise client during an incident |
 
-## Session 4 — human-in-the-loop points and the override switch (to come)
+## Session 4 — human checkpoints and override switch
+**Implemented 12 November 2026, local synthetic-data demo; team acceptance sign-off pending.** This section records actual S4 behaviour and supersedes earlier S3 implementation assumptions where they differ.
+
+| Checkpoint | Kind | Who / local behaviour |
+|---|---|---|
+| Unknown account/language, weak model score, insufficient context | Abstention/review | Engineer keeps manual triage; no classifier-driven auto-raise |
+| No reusable source | Abstention | No troubleshooting is invented; engineer checks the case |
+| P1/P2 and any priority reduction | Approval | Engineer records verification/reason before acceptance; API enforces this |
+| Privileged-access or legal request | Human-only handling | No access change or legal answer is executed |
+| Take over | Manual override | Proposal hidden; manual priority/team controls stay available |
+| P3/P4 | Assisted recommendation | Human acceptance logged. Production 5% sampling remains a future policy |
+
+- **Override owner in the proposed operating model:** Head of Support. Local operator names are self-declared and do not establish real identity or approval authority.
+- **How:** header → Change mode → reason. `POST /api/switch` persists and audits the mode. Default is `suggestions`; assisted mode deliberately permits eligible automatic raises for new tickets only.
+- **Scope:** all new tickets. Suggestions mode also requires recorded verification before accepting existing tickets. Previous raised priorities and engineer decisions remain unchanged so disabling cannot downgrade a ticket.
+- **Test:** automated API/browser evidence is recorded in `evals/engineering_checks.md`. Actual team operator, date and acceptance sign-off: **pending**.
+- **Evaluation data:** `evals/eval_set_v0.csv` contains 50 synthetic candidate INPUTS, not human-labelled answers. Freeze/run manifests and two independent grading files go under `evals/runs/`. Repository collaborators can see synthetic files; no real customer data is allowed.
+- **Training data:** 300 synthetic rows (70/75/90/65), 40 template families. Labels are AI proposals pending human review. Earlier S3 5%-P1 and human-label claims do not describe this current generated set.
+- **Knowledge base:** synthetic versioned fixtures; reuse sign-off is simulated, not a real security engineer approval.
+- **Persistence:** redacted text, decisions, timestamps and reasons are stored in Git-ignored `prototype/runtime/triage.sqlite3` until the team resets it. This corrects the earlier memory-only assumption. Inference and assets are local; no external model/provider is called.
+- **Redaction:** best-effort regex before inference/storage. Passing fixtures do not establish universal coverage or a legal determination. Real-data permissions, retention and classification remain production questions for the designated S1/S3 reviewers.
+- **Isolation:** retrieval returns only same-customer sources or generic KB. Regression checks verify another customer's exact source is excluded. Semantic relevance is judged by humans.
+- **Evaluation integrity:** the 20 original examples and all dev/test fixtures are exposed demo data. Humans must annotate new inputs before prediction and review semantic near-duplicates. The runner blocks pending labels and altered frozen runs.
+
+### S4 technical update — 15 November 2026
+- Corrected missed development emergencies and source matching using only the exposed C01–C20 examples; preserved the initial diagnostic and reference bytes. [Comparison and limits](evals/ai_review/post_fix_2026_11_15/comparison.md). Three routing-ownership conventions still need agreement before freeze.
+- An explicitly suspected incident can raise in assisted mode even when the ticket also asks a legal question; the legal answer remains human-only. Privileged-change requests still block automatic raising. Every P1/P2 needs engineer review before acceptance. The default suggestions switch still blocks every automatic raise.
+- Automated verification: 29 code/API/protocol/import tests and 16 real-browser checks passed on 15 November; [evidence](evals/engineering_checks.md). Real team operator, date and switch acceptance sign-off remain **pending**; no operator identity is fabricated.
+- [Review instructions](evals/VALIDATION_EQUIPE.md): proposed split Jane E001–E017, Malek E018–E034, Luna E035–E050. `prototype.import_review` requires explicit decisions/names/dates, rejects changed original inputs and writes a separate reviewed CSV without inference. These fields record the reviewers' assertions; the script cannot establish that a real review occurred.
+- The official 50 inputs remain unpredicted by these technical checks. Two people must independently grade all 50 outputs after the actual label review and freeze; the review split is not a substitute for two graders.
+
 ## Session 5 — counter-metrics and the segments we report (to come)
 ## Session 6 — protected segments and the harm threshold that stops an experiment (to come)
 ## Session 7 — accountable owner, rollback authority, incident path (to come)

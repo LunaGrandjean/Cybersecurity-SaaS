@@ -1,0 +1,28 @@
+# AI-assisted preparation — not human grading
+
+Prepared on **15 November 2026**. No evaluation is attributed to Jane, Malek or Luna. No human name, signature, grade or review time has been invented.
+
+## Files
+- `proposed_labels_v0.csv`: 50 proposed corrections for E001–E050, authored by an AI assistant from ticket facts and the written rubric. Includes explicit uncertainty notes. Human fields remain blank and status is `ai_proposed_pending_human_review`.
+- `demo_reference_adapted.json`: proposed structured interpretation of Jane's original 20 exposed demo examples, saved before computing predictions. C19 proposes P2 but its declared P1 must remain effective until a human approves lowering.
+- `demo_diagnostic.json` / `.csv`: actual model outputs and mechanical comparisons on those **20 exposed demo cases only**. They are neither two independent graders nor an official test result.
+- `diagnostic_report.md`: readable exploratory results and component-level misses, generated from the actual diagnostic output.
+
+The canonical `evals/eval_set_v0.csv` remains unlabelled and is NOT passed to the model by either preparation script. It can still be used for the first human-labelled test if nobody has separately exposed its predictions.
+
+The baseline above is preserved. A separate post-fix diagnostic is in `post_fix_2026_11_15/`: same provisional references, no official holdout inference. See [before/after comparison](post_fix_2026_11_15/comparison.md).
+
+For the actual team review, follow [VALIDATION_EQUIPE.md](../VALIDATION_EQUIPE.md). `prototype.import_review` checks actual decision/name/date fields and writes a new reviewed CSV without creating predictions or overwriting earlier annotations.
+
+## Suggested work distribution, not a record of completed work
+| Proposed task owner | Initial label review |
+|---|---|
+| Jane | E001–E017 |
+| Malek | E018–E034 |
+| Luna | E035–E050 |
+
+Each person reads the original input, considers the AI proposal critically, accepts or corrects it, and records their own real name/date. Cases with `ai_uncertainty` need agreement on the rubric before the first model run. Copy only genuinely reviewed answers into the canonical CSV; set `human_verified` only after that actual review. Optional `human_decision` / `human_comment` columns are working notes, not a signature.
+
+After labels/model are frozen and the 50 cases have run, **two people each grade all 50 outputs independently**. For example Jane could fill grading A and Malek grading B, while Luna coordinates disagreements; these are suggested future roles only. Do not split the two-grader requirement into 25 cases per person. Preserve the original grades.
+
+Mechanical severity/team/source agreement on the demo does not establish the ≥62% two-human acceptance criterion, measured ≥17% time saving, or a calibrated confidence score. The official report must disclose the actual method and any remaining human work.

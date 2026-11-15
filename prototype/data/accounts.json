@@ -1,0 +1,50 @@
+[
+  {
+    "id": "helix",
+    "name": "Helix Logistics",
+    "tier": "Enterprise",
+    "sla_minutes": {
+      "P1": 60,
+      "P2": 240,
+      "P3": 1440,
+      "P4": 4320
+    },
+    "source": "Synthetic demo contract; P1/P2 from P7; P3/P4 are prototype decisions."
+  },
+  {
+    "id": "arpege",
+    "name": "Banque Arpège",
+    "tier": "Enterprise",
+    "sla_minutes": {
+      "P1": 60,
+      "P2": 240,
+      "P3": 1440,
+      "P4": 4320
+    },
+    "source": "Synthetic demo contract; P1/P2 from P7; P3/P4 are prototype decisions."
+  },
+  {
+    "id": "orion",
+    "name": "Orion Retail",
+    "tier": "Standard",
+    "sla_minutes": {
+      "P1": 60,
+      "P2": 240,
+      "P3": 1440,
+      "P4": 4320
+    },
+    "source": "Synthetic demo contract; P1/P2 from P7; P3/P4 are prototype decisions."
+  },
+  {
+    "id": "nordwind",
+    "name": "Nordwind Energy",
+    "tier": "Enterprise",
+    "sla_minutes": {
+      "P1": 60,
+      "P2": 240,
+      "P3": 1440,
+      "P4": 4320
+    },
+    "source": "Synthetic demo contract; P1/P2 from P7; P3/P4 are prototype decisions."
+  }
+]

@@ -30,4 +30,7 @@ ticket log. "Take over" hides the proposal. Trust level: L4 to raise, person onl
 L1 for the similar-ticket suggestions.
 ```
 
-- **Screenshot:** add one image in the repo (e.g. `prototype_v0.2.png`) and link it here.
+- **S3 screenshot:** [Jane's v0.2](prototype/prototype_v0.2.png).
+- **S4 functional version:** local v0.4; run instructions in [prototype/README.md](prototype/README.md). The original v0.2 HTML is preserved. S4 handles new synthetic inputs; its classifier score is uncalibrated and independent evaluation is pending.
+- **S4 screenshot:** [local v0.4 console](prototype/prototype_v0.4.png).
+- **S4 correction checked 15 November:** [current screenshot](evals/engineering_2026_11_15_retry/prototype.png), [29 engineering tests / 16 browser checks](evals/engineering_checks.md), [team validation instructions](evals/VALIDATION_EQUIPE.md). Older screenshots and Jane's original remain preserved; the independent human evaluation is still pending.

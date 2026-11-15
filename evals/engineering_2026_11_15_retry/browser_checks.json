@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-11-15T20:18:11.791295+00:00",
+  "type": "engineering browser QA, not product evaluation",
+  "health": {
+    "status": "ok",
+    "model_version": "e472b6a6d01222de",
+    "training_rows": 300
+  },
+  "checks": [
+    "Console loads in suggestions-only mode",
+    "Six or more demo tickets rendered through API",
+    "New ticket input reaches API and renders redacted",
+    "New ticket stays P3 in suggestions mode",
+    "Acceptance blocked before required human review",
+    "Takeover retains manual controls",
+    "Engineer correction applied",
+    "Acceptance available after explicit review",
+    "Tickets survive page reload",
+    "Global assisted switch works from UI",
+    "Switch persists across page reload",
+    "Audit download includes engineer corrections and switch",
+    "Desktop panels scroll without expanding the page",
+    "Mobile viewport has no horizontal overflow",
+    "No browser JavaScript errors",
+    "No page requests leave local service"
+  ],
+  "browser_errors": [],
+  "external_requests": []
+}
