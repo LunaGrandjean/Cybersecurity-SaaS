@@ -14,6 +14,12 @@ The baseline above is preserved. A separate post-fix diagnostic is in `post_fix_
 
 For the actual team review, follow [VALIDATION_EQUIPE.md](../VALIDATION_EQUIPE.md). `prototype.import_review` checks actual decision/name/date fields and writes a new reviewed CSV without creating predictions or overwriting earlier annotations.
 
+## AI re-review of E035–E050 — 18 November 2026
+
+The 16 proposed references assigned to Luna were reviewed again against the inputs, rubric and actual KB text, without running the model. See [the case-by-case review](review_E035_E050_2026-11-18.md) and [structured review decisions](review_E035_E050_2026-11-18.json). Only their proposed actions, source references, handover flags and AI notes were updated; other cases and human fields were preserved. The canonical evaluation CSV remains unchanged and human validation is still pending.
+
+Four unsupported expected source matches were removed (E035, E037, E039, E048); E035/E039 now explicitly require a human because there is no sufficiently relevant source. E050 closely overlaps training family `TRAIN-P4-03`: replacement is recommended before an independent evaluation. No input was silently replaced, and the classifier/training data were not changed in response to these cases.
+
 ## Suggested work distribution, not a record of completed work
 | Proposed task owner | Initial label review |
 |---|---|
