@@ -54,6 +54,6 @@ Autres points du cours : les entretiens S3 restent declares simules dans le depo
 
 ## Update as of 21 November 2026
 
-Human review of the references is partly complete: Jane entered decisions for E001-E017, Malek accepted E018-E034 on 17 November, and Luna approved E035-E049 on 18 November. E050 is marked for replacement because it overlaps `TRAIN-P4-03`. Jane's dates contain no time or timezone; obtain her actual review times before import. Her decision values have been normalized to lowercase `accept`/`correct` without changing her decisions. The canonical CSV remains unlabelled and no official run has been executed.
+Human review of the references is complete for all 50 cases: Jane reviewed E001-E017 with Malek on 17 November (16:00-17:00), Malek accepted E018-E034 on 17 November, and Luna approved E035-E049 on 18 November. E050 was replaced on 22 November 2026 by a new independent case (R1, incident family `EVAL-ONLY-050-R1`, a French holiday support-coverage question with no overlap with training). Malek Saoudi reviewed and approved its expected reference on behalf of Luna Grandjean. The original row is kept in `evals/ai_review/replaced/E050_v0_replaced.csv`. The canonical CSV remains unlabelled and no official run has been executed.
 
-Before freezing: replace E050 with an independently reviewed case, complete Jane's timestamp metadata, review the training labels, then use the guarded import. See the [current validation status](evals/ai_review/README.md).
+Next: review the training labels, then use the guarded import and freeze. See the [current validation status](evals/ai_review/README.md).

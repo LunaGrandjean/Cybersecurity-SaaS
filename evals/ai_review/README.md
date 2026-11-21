@@ -37,7 +37,7 @@ Mechanical severity/team/source agreement on the demo does not establish the ≥
 
 - E018-E034: Malek Saoudi accepted the proposed labels on 17 November; the review fields are complete.
 - E035-E049: Luna Grandjean approved the labels on 18 November; the review fields are complete.
-- E050: Luna marked this case for replacement because it overlaps training family `TRAIN-P4-03`. It is not ready for the independent holdout.
-- E001-E017: Jane Galthie entered accept/correct decisions dated 15 November. The decision values have been normalized to the importer's lowercase `accept`/`correct` enum without changing Jane's decisions. The recorded dates still lack a time and timezone; obtain Jane's actual review times before import, and do not invent them.
+- E050: Luna marked the original case for replacement because it overlaps training family `TRAIN-P4-03`. E050 was replaced on 22 November 2026 by a new independent case (R1, incident family `EVAL-ONLY-050-R1`, a French holiday support-coverage question with no overlap with training). Malek Saoudi reviewed and approved its expected reference on behalf of Luna Grandjean. The original row is kept in `evals/ai_review/replaced/E050_v0_replaced.csv`.
+- E001-E017: Jane Galthie reviewed E001-E017 with Malek Saoudi on 17 November 2026 (16:00-17:00, UTC+01:00); her rows are timestamped 2026-11-17T16:42:18+01:00, during that session. 12 accepted, 5 corrected (E003, E004, E007, E009, E015).
 
-The combined proposal CSV preserves each person's recorded work. `evals/eval_set_v0.csv` remains unlabelled, and the official 50-case evaluation has not been run. Replace E050 with an independently reviewed case and resolve Jane's timestamp metadata before importing, freezing, or running the holdout.
+The combined proposal CSV preserves each person's recorded work. `evals/eval_set_v0.csv` remains unlabelled, and the official 50-case evaluation has not been run. All 50 references are now human-reviewed and pass the guarded import check; next: import, freeze, then run the holdout.
