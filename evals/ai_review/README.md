@@ -32,3 +32,12 @@ Each person reads the original input, considers the AI proposal critically, acce
 After labels/model are frozen and the 50 cases have run, **two people each grade all 50 outputs independently**. For example Jane could fill grading A and Malek grading B, while Luna coordinates disagreements; these are suggested future roles only. Do not split the two-grader requirement into 25 cases per person. Preserve the original grades.
 
 Mechanical severity/team/source agreement on the demo does not establish the ≥62% two-human acceptance criterion, measured ≥17% time saving, or a calibrated confidence score. The official report must disclose the actual method and any remaining human work.
+
+## Human review status as of 21 November 2026
+
+- E018-E034: Malek Saoudi accepted the proposed labels on 17 November; the review fields are complete.
+- E035-E049: Luna Grandjean approved the labels on 18 November; the review fields are complete.
+- E050: Luna marked this case for replacement because it overlaps training family `TRAIN-P4-03`. It is not ready for the independent holdout.
+- E001-E017: Jane Galthie entered accept/correct decisions dated 15 November. The decision values have been normalized to the importer's lowercase `accept`/`correct` enum without changing Jane's decisions. The recorded dates still lack a time and timezone; obtain Jane's actual review times before import, and do not invent them.
+
+The combined proposal CSV preserves each person's recorded work. `evals/eval_set_v0.csv` remains unlabelled, and the official 50-case evaluation has not been run. Replace E050 with an independently reviewed case and resolve Jane's timestamp metadata before importing, freezing, or running the holdout.
