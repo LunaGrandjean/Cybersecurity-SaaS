@@ -8,7 +8,7 @@ Prepared on **15 November 2026**. No evaluation is attributed to Jane, Malek or 
 - `demo_diagnostic.json` / `.csv`: actual model outputs and mechanical comparisons on those **20 exposed demo cases only**. They are neither two independent graders nor an official test result.
 - `diagnostic_report.md`: readable exploratory results and component-level misses, generated from the actual diagnostic output.
 
-The canonical `evals/eval_set_v0.csv` remains unlabelled and is NOT passed to the model by either preparation script. It can still be used for the first human-labelled test if nobody has separately exposed its predictions.
+Neither preparation script passed the evaluation cases to the model.
 
 The baseline above is preserved. A separate post-fix diagnostic is in `post_fix_2026_11_15/`: same provisional references, no official holdout inference. See [before/after comparison](post_fix_2026_11_15/comparison.md).
 
@@ -40,4 +40,4 @@ Mechanical severity/team/source agreement on the demo does not establish the ≥
 - E050: Luna marked the original case for replacement because it overlaps training family `TRAIN-P4-03`. E050 was replaced on 22 November 2026 by a new independent case (R1, incident family `EVAL-ONLY-050-R1`, a French holiday support-coverage question with no overlap with training). Malek Saoudi reviewed and approved its expected reference on behalf of Luna Grandjean. The original row is kept in `evals/ai_review/replaced/E050_v0_replaced.csv`.
 - E001-E017: Jane Galthie reviewed E001-E017 with Malek Saoudi on 17 November 2026 (16:00-17:00, UTC+01:00); her rows are timestamped 2026-11-17T16:42:18+01:00, during that session. 12 accepted, 5 corrected (E003, E004, E007, E009, E015).
 
-The combined proposal CSV preserves each person's recorded work. `evals/eval_set_v0.csv` remains unlabelled, and the official 50-case evaluation has not been run. All 50 references are now human-reviewed and pass the guarded import check; next: import, freeze, then run the holdout.
+The combined proposal CSV preserves each person's recorded work. `evals/eval_set_v0.csv` now holds the 50 human-labelled cases (imported 22 November 2026); the original input-only version is kept as `evals/eval_set_v0_inputs.csv`. The official run is frozen in `evals/runs/v0` and awaits two independent graders.

@@ -1,0 +1,11 @@
+{
+  "frozen_at": "2026-11-21T23:43:35.022517+00:00",
+  "cases_sha256": "2db7b5c4b98ad788d5a18c19143e6ec5be0af9e0d9911240dd2aed27ebc3aec3",
+  "cases": 50,
+  "model_version": "3e5517585b1eeb42",
+  "mode": "assisted",
+  "human_labels_required": true,
+  "predictions_exposed": true,
+  "executed_at": "2026-11-21T23:43:37.915640+00:00",
+  "predictions_sha256": "c1d05b39cd11e0bc17e66595b8d2446ab032c351a5cd7ea38b8c50607e671d09"
+}
