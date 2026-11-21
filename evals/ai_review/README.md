@@ -14,6 +14,12 @@ The baseline above is preserved. A separate post-fix diagnostic is in `post_fix_
 
 For the actual team review, follow [VALIDATION_EQUIPE.md](../VALIDATION_EQUIPE.md). `prototype.import_review` checks actual decision/name/date fields and writes a new reviewed CSV without creating predictions or overwriting earlier annotations.
 
+## AI re-review of E035–E050 — 18 November 2026
+
+The 16 proposed references assigned to Luna were reviewed again against the inputs, rubric and actual KB text, without running the model. See [the case-by-case review](review_E035_E050_2026-11-18.md) and [structured review decisions](review_E035_E050_2026-11-18.json). Only their proposed actions, source references, handover flags and AI notes were updated; other cases and human fields were preserved. The canonical evaluation CSV remains unchanged and human validation is still pending.
+
+Four unsupported expected source matches were removed (E035, E037, E039, E048); E035/E039 now explicitly require a human because there is no sufficiently relevant source. E050 closely overlaps training family `TRAIN-P4-03`: replacement is recommended before an independent evaluation. No input was silently replaced, and the classifier/training data were not changed in response to these cases.
+
 ## Suggested work distribution, not a record of completed work
 | Proposed task owner | Initial label review |
 |---|---|
@@ -26,3 +32,12 @@ Each person reads the original input, considers the AI proposal critically, acce
 After labels/model are frozen and the 50 cases have run, **two people each grade all 50 outputs independently**. For example Jane could fill grading A and Malek grading B, while Luna coordinates disagreements; these are suggested future roles only. Do not split the two-grader requirement into 25 cases per person. Preserve the original grades.
 
 Mechanical severity/team/source agreement on the demo does not establish the ≥62% two-human acceptance criterion, measured ≥17% time saving, or a calibrated confidence score. The official report must disclose the actual method and any remaining human work.
+
+## Human review status as of 21 November 2026
+
+- E018-E034: Malek Saoudi accepted the proposed labels on 17 November; the review fields are complete.
+- E035-E049: Luna Grandjean approved the labels on 18 November; the review fields are complete.
+- E050: Luna marked this case for replacement because it overlaps training family `TRAIN-P4-03`. It is not ready for the independent holdout.
+- E001-E017: Jane Galthie entered accept/correct decisions dated 15 November. The decision values have been normalized to the importer's lowercase `accept`/`correct` enum without changing Jane's decisions. The recorded dates still lack a time and timezone; obtain Jane's actual review times before import, and do not invent them.
+
+The combined proposal CSV preserves each person's recorded work. `evals/eval_set_v0.csv` remains unlabelled, and the official 50-case evaluation has not been run. Replace E050 with an independently reviewed case and resolve Jane's timestamp metadata before importing, freezing, or running the holdout.

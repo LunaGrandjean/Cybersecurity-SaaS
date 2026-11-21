@@ -70,3 +70,7 @@ Reporter les vrais résultats de `metrics.json` dans [report_v0.md](report_v0.md
 Sur des tickets inventés, passer en mode assisté, créer un cas critique puis repasser en mode suggestions et créer un nouveau cas critique. Le second garde sa priorité déclarée ; le premier n'est pas rétrogradé. Tester aussi la reprise en main et exporter le journal. Dans `governance.md`, renseigner la personne, la date réelle et le résultat après votre essai.
 
 Faire les commits avec vos propres comptes, puis pousser le rendu. La consigne demande quatre auteurs pour quatre commits alors que l'équipe compte trois personnes : faire préciser cette modalité par l'enseignant. Le starter Paylio absent des supports locaux et les entretiens S3 encore simulés restent des éléments à régulariser selon les attentes du cours.
+
+## Current status - 21 November 2026
+
+Human review is partly complete: Jane entered decisions for E001-E017, Malek accepted E018-E034, and Luna approved E035-E049. E050 must be replaced because of overlap with `TRAIN-P4-03`. Jane's recorded dates lack time and timezone; obtain the real review times. Her decision values are already normalized to lowercase `accept`/`correct` without changing the decisions. Do not import, freeze, or run the evaluation until E050 is replaced and Jane's required metadata is complete. No official run has been executed.
