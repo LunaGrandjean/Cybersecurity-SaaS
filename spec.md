@@ -103,6 +103,15 @@ These were found during inspection/development, BEFORE holdout execution. They m
 | EVAL-04 | Effective priority stays at the declared priority even when the proposed severity is higher (16 cases, e.g. E007 and E011, expected P1, left at P4) | sla / rules | In assisted mode, when proposed severity > declared priority, `effective_priority` = proposed severity and `auto_raised = true`, logged in the audit; never lower |
 | EVAL-05 | The team is left to "Human triage" while the expected team is clear (9 cases graded on routing; 31/50 outputs are Human triage, 24 of them where a named team was expected) | routing | The routing table covers Platform, Detection Engineering, Integrations, Reporting and Customer Success topics; "Human triage" only when the expected action requires a person to choose; team accuracy ≥ 70 % |
 
+### After the fresh run v0.5 (`evals/runs/v1_fresh`, 22 November 2026)
+
+| Id | Observed miss (cases) | Component | Testable requirement |
+|---|---|---|---|
+| EVAL-06 | Real P1s of attack types absent from training and rules: sensor tampering, API-key misuse, detection disabled fleet-wide, uncontrolled remote session, credential dumping (E054, E055, E058, E062, E064) | classifier | Any ticket mentioning a security control being removed or disabled, a credential or key used from an unknown origin, or an attacker tool or remote access the customer does not control, proposes **P1** and hands over; P1 recall = 100 % on the **next fresh** labelled set, not on these cases |
+| EVAL-07 | P3 tickets over-escalated to P2/P1 when a workaround or mitigation is stated (E065, E066, E071, E075, E080, E083, E085) | classifier | Stated workaround or mitigation ("still protected", "workaround", "other sites work") caps a classifier proposal at P3 unless a safety rule fires |
+| EVAL-08 | P1 incidents routed to the component team instead of Incident Response (E051, E053, E057, E060, E063) | routing | A P1 from a compromise rule always routes to Incident Response; component teams only for P1 outages without compromise |
+| EVAL-09 | Correct triage, but no cited source addresses the ticket's component (E059, E068, E070, E077, E088) | retrieval | Sources are filtered to the routed team's KB articles first; source hit@3 ≥ 80 % on the next fresh set |
+
 ## out_of_scope
 Customer-facing chatbot, customer messages, remediation, autonomous lowering, production identity/access control, external inference API, fine-tuning, other languages, auto-closing and automatic cross-customer incident merging.
 

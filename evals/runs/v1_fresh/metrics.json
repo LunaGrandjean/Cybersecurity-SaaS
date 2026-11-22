@@ -1,0 +1,91 @@
+{
+  "cases": 50,
+  "graders": [
+    "malek saoudi",
+    "luna grandjean"
+  ],
+  "routine_accepted": 9,
+  "routine_total": 22,
+  "routine_acceptance": 0.4090909090909091,
+  "p1_detected": 9,
+  "p1_total": 14,
+  "p1_recall": 0.6428571428571429,
+  "false_p1": 3,
+  "non_p1_total": 28,
+  "false_p1_rate": 0.10714285714285714,
+  "severity_accuracy": 0.72,
+  "team_accuracy": 0.68,
+  "effective_priority_accuracy": 0.74,
+  "handover_agreement": 0.94,
+  "disagreements": 3,
+  "top_misses": [
+    {
+      "component": "routing",
+      "reason": "Severity and priority correct but routed to Detection Engineering instead of Incident Response; no expected source cited",
+      "grader_mentions": 1
+    },
+    {
+      "component": "routing",
+      "reason": "P1 severity and priority correct but routed to Detection Engineering instead of Incident Response; no expected source cited",
+      "grader_mentions": 1
+    },
+    {
+      "component": "routing",
+      "reason": "Severity and priority correct but routed to Network instead of Incident Response; cites NW/KB-NET sources instead of KB-SEC-01",
+      "grader_mentions": 1
+    }
+  ],
+  "segments": {
+    "P1": {
+      "cases": 14,
+      "both_accept": 2
+    },
+    "P2": {
+      "cases": 6,
+      "both_accept": 4
+    },
+    "P3": {
+      "cases": 15,
+      "both_accept": 4
+    },
+    "P4": {
+      "cases": 7,
+      "both_accept": 5
+    },
+    "ABSTAIN": {
+      "cases": 8,
+      "both_accept": 7
+    },
+    "language:en": {
+      "cases": 27,
+      "both_accept": 13
+    },
+    "language:fr": {
+      "cases": 21,
+      "both_accept": 7
+    },
+    "language:it": {
+      "cases": 1,
+      "both_accept": 1
+    },
+    "language:pt": {
+      "cases": 1,
+      "both_accept": 1
+    },
+    "tier:Enterprise": {
+      "cases": 30,
+      "both_accept": 13
+    },
+    "tier:Standard": {
+      "cases": 20,
+      "both_accept": 9
+    }
+  },
+  "source_hit_at_3": {
+    "hits": 22,
+    "eligible": 37,
+    "rate": 0.5945945945945946
+  },
+  "verdict": "not_met",
+  "handling_time_saved": "NOT MEASURED; acceptance is only a proxy based on unverified timing assumptions."
+}

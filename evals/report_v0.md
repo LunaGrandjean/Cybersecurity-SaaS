@@ -79,3 +79,34 @@ C03 now surfaces a possible incident and raises P4 to P1 in assisted mode. C18 p
 [Raw post-fix outputs and comparison](ai_review/post_fix_2026_11_15/comparison.md). Perfect source-id overlap is not proof of relevant troubleshooting. No human acceptance result or measured time saving is claimed. The official top-three-misses section remains pending the real independent run.
 
 Next: [team validation instructions](VALIDATION_EQUIPE.md), then freeze/run, two independent grades and exact reporting. The import helper refuses incomplete review, never generates grades and never invokes inference.
+
+## 8. v0.5 on fresh cases: after fixing EVAL-01 to EVAL-05 (22 November 2026)
+**Engine v0.5** (`e4ef11ac89758672`) implements spec EVAL-01 to EVAL-05: account-takeover, retained-access and cross-tenant P1 rules; explicit "no incident" wording caps a classifier P1; abstention on attachment-only, legal, other-customer-data, prompt-injection, unverified privileged-change and vague tickets; raising the effective priority whenever the proposal is higher (assisted mode, never lowering); a wider routing vocabulary. The rules were developed on the exposed v0 cases only (development check: P1 recall 14/14, false P1 3/28). The engine was frozen, then run **once** on the 50 **fresh** cases E051–E100 of `eval_set_v1.csv`, which were labelled by the team before the run (`evals/eval_set_v1_fresh.csv`; run `evals/runs/v1_fresh`; cases SHA-256 `66303cc4…`; predictions SHA-256 `46a2b526…`). Caveat: the person writing the fixes had seen the v1 inputs; the fixes follow the spec patterns, not individual v1 tickets.
+
+| Measure | v0 (E001–E050) | **v0.5 (E051–E100, fresh)** | Criterion |
+|---|---|---|---|
+| P3/P4 triages both graders accept unchanged | 2/17 = 11.8 % | **9/22 = 40.9 %** | ≥ 62 % → not met |
+| P1 recall | 11/14 = 78.6 % | **9/14 = 64.3 %** | 100 % → **not met** |
+| False-P1 rate | 7/28 = 25 % | **3/28 = 10.7 %** | ≤ 15 % → **met** |
+| Severity accuracy | 66 % | **72 %** | — |
+| Effective-priority accuracy | 58 % | **74 %** | — |
+| Team accuracy | 34 % | **68 %** | — |
+| Handover agreement | 92 % | **94 %** | — |
+| Expected source in top 3 | 41 % | **59 %** (22/37) | — |
+| ABSTAIN cases that abstain | 0/8 | **7/8** | — |
+| Outputs sent to Human triage | 31/50 | **9/50** | — |
+| Priority lowered below declared | 0 | **0** | 0 → met |
+
+Both graders accept, by segment: P1 2/14, P2 4/6, P3 4/15, P4 5/7, ABSTAIN 7/8; EN 13/27, FR 7/21; Enterprise 13/30, Standard 9/20.
+
+**Graders:** Malek Saoudi (`grading_a.csv`) and Luna Grandjean (`grading_b.csv`) disagree on **3/50 cases (94 % agreement)**: E059, E063 and E066, all borderline (a correct triage with off-topic sources, Human triage on a P1, a P2 proposed for a P3). The LLM judge (two runs, `evals/runs/v1_fresh/ai_judge/`) agrees with grader A on 50/50 and with grader B on 47/50.
+
+**Three most frequent misses on fresh cases** (grader A):
+
+| Frequency | Failure and case ids | Component | New spec requirement |
+|---|---|---|---|
+| 14/50 | **Wrong severity.** 5 real P1s of *new attack types* proposed as P3/P4: mass sensor removal (E054), production API key used from an unknown address (E055), detection silently off fleet-wide (E058), uncontrolled remote session (E062), credential dumping on a domain controller (E064). Plus over-escalation of P3 tickets to P2/P1 (E065, E066, E071, E074, E080, E083, E085) | `classifier` | EVAL-06, EVAL-07 |
+| 8/50 | **P1 routed to the component team instead of Incident Response** (e.g. E051, E053, E057, E060, E063) | `routing` | EVAL-08 |
+| 5/50 | **Correct triage, but the cited sources do not address the component** (E059, E068, E070, E077, E088) | `retrieval` | EVAL-09 |
+
+**Reading.** The fixes generalised well where they encode a *policy* (raising, abstaining, avoiding false P1s, routing): those metrics improved on cases the rules had never seen. They did **not** generalise where they encode *known attack patterns*: P1 recall fell on attack types absent from training and rules. This is the concept drift expected in `06_07_experiments_operations.md` §3, now measured. **Consequence for launch:** no automatic raising in production. Only suggestions-only or shadow mode, until P1 recall is 100 % on a fresh labelled set.
