@@ -93,7 +93,15 @@ These were found during inspection/development, BEFORE holdout execution. They m
 | Data/train-label/sign-off claims exceeded available evidence | All synthetic origins, AI-proposed labels and simulated source approvals explicitly marked |
 
 ## post_eval_misses
-**Pending.** After the first frozen human-graded run, add each actual miss, its case id/component and a testable requirement here. Preserve the original run before implementing changes.
+*Added 22 November 2026 from run `evals/runs/v0` (see `evals/report_v0.md` §2). The original run is preserved.*
+
+| Id | Observed miss (cases) | Component | Testable requirement |
+|---|---|---|---|
+| EVAL-01 | Real P1s proposed as P3/P4: recovery-address takeover, retained contractor admin access, cross-tenant data exposure (E003, E012, E015) | classifier | Account takeover, privileged access kept after offboarding, and any cross-tenant data visibility propose **P1** and require a human; P1 recall = 100 % on the next frozen set |
+| EVAL-02 | False P1 on contained, test, planned-exercise or documentation tickets (E035, E039, E049, E050; E004, E017, E024 at P2) | classifier | Explicit "no incident", "test", "planned exercise" or documentation-only wording cannot produce P1 unless an active-compromise signal is also present; false-P1 rate ≤ 15 % |
+| EVAL-03 | A severity is proposed on ABSTAIN cases: vague ticket, attachment only, legal request, another customer's data, prompt injection, unverified authority (E041, E042, E045–E048) | classifier / policy | These patterns return `proposed_severity = null` (ABSTAIN), keep the declared priority and hand the ticket to a person; 8/8 ABSTAIN cases abstain |
+| EVAL-04 | Effective priority stays at the declared priority even when the proposed severity is higher (16 cases, e.g. E007 and E011, expected P1, left at P4) | sla / rules | In assisted mode, when proposed severity > declared priority, `effective_priority` = proposed severity and `auto_raised = true`, logged in the audit; never lower |
+| EVAL-05 | The team is left to "Human triage" while the expected team is clear (9 cases; 26/50 outputs are Human triage overall) | routing | The routing table covers Platform, Detection Engineering, Integrations, Reporting and Customer Success topics; "Human triage" only when the expected action requires a person to choose; team accuracy ≥ 70 % |
 
 ## out_of_scope
 Customer-facing chatbot, customer messages, remediation, autonomous lowering, production identity/access control, external inference API, fine-tuning, other languages, auto-closing and automatic cross-customer incident merging.

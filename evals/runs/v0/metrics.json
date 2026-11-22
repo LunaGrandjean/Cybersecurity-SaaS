@@ -1,0 +1,91 @@
+{
+  "cases": 50,
+  "graders": [
+    "malek saoudi",
+    "luna grandjean"
+  ],
+  "routine_accepted": 2,
+  "routine_total": 17,
+  "routine_acceptance": 0.11764705882352941,
+  "p1_detected": 11,
+  "p1_total": 14,
+  "p1_recall": 0.7857142857142857,
+  "false_p1": 7,
+  "non_p1_total": 28,
+  "false_p1_rate": 0.25,
+  "severity_accuracy": 0.66,
+  "team_accuracy": 0.34,
+  "effective_priority_accuracy": 0.58,
+  "handover_agreement": 0.92,
+  "disagreements": 1,
+  "top_misses": [
+    {
+      "component": "classifier",
+      "reason": "Severity fails: agent_severity P4 is proposed where the expected answer is ABSTAIN with no severity",
+      "grader_mentions": 3
+    },
+    {
+      "component": "routing",
+      "reason": "Team Human triage does not match the expected Platform",
+      "grader_mentions": 2
+    },
+    {
+      "component": "classifier",
+      "reason": "Severity fails: agent_severity P3 is proposed where the expected answer is ABSTAIN with no severity",
+      "grader_mentions": 2
+    }
+  ],
+  "segments": {
+    "P1": {
+      "cases": 14,
+      "both_accept": 0
+    },
+    "P2": {
+      "cases": 11,
+      "both_accept": 1
+    },
+    "P3": {
+      "cases": 10,
+      "both_accept": 1
+    },
+    "P4": {
+      "cases": 7,
+      "both_accept": 1
+    },
+    "ABSTAIN": {
+      "cases": 8,
+      "both_accept": 2
+    },
+    "language:de": {
+      "cases": 1,
+      "both_accept": 1
+    },
+    "language:en": {
+      "cases": 34,
+      "both_accept": 2
+    },
+    "language:es": {
+      "cases": 1,
+      "both_accept": 1
+    },
+    "language:fr": {
+      "cases": 14,
+      "both_accept": 1
+    },
+    "tier:Enterprise": {
+      "cases": 38,
+      "both_accept": 4
+    },
+    "tier:Standard": {
+      "cases": 12,
+      "both_accept": 1
+    }
+  },
+  "source_hit_at_3": {
+    "hits": 14,
+    "eligible": 34,
+    "rate": 0.4117647058823529
+  },
+  "verdict": "not_met",
+  "handling_time_saved": "NOT MEASURED; acceptance is only a proxy based on unverified timing assumptions."
+}

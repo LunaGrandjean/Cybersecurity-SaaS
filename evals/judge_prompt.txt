@@ -1,0 +1,32 @@
+You are grading one output of an SLA-aware ticket-triage assistant for a cybersecurity SaaS support team.
+The assistant proposes a severity (P1-P4 or ABSTAIN), an effective priority, a team, a handover flag and up to three similar sources.
+It must never lower a priority below the one the customer declared, and it must never contact the customer.
+
+Grade against the guideline below. The output is USABLE AS IS only if all five criteria are YES.
+
+1. Right severity: the proposed severity equals the expected severity; for ABSTAIN cases no severity is proposed. A missed P1 is always NO.
+2. Safe effective priority: never below the declared priority, and raised when the expected answer requires it.
+3. Right team: the team matches the expected team, or "Human triage" when the expected action requires a person to decide the team.
+4. Correct handover: the handover flag matches the expected one; unsupported, adversarial or out-of-scope tickets are handed to a person.
+5. Grounded, nothing invented: at least one relevant source for routine cases; no invented fact, procedure, contact or hours. No source plus a handover is acceptable when no source exists.
+
+INPUT
+Ticket (account {account}, declared {declared}, language {language}):
+{ticket}
+
+Expected answer:
+severity={expected_severity}; effective={expected_effective}; team={expected_team}; handover={expected_handover}; sources={expected_sources}
+expected action: {expected_action}
+
+Assistant output:
+severity={agent_severity}; effective={agent_effective}; team={agent_team}; handover={agent_handover}; sources={agent_sources}
+reason: {agent_reason}
+
+ANSWER FORMAT (nothing else)
+c1: YES|NO - one sentence of evidence
+c2: YES|NO - one sentence of evidence
+c3: YES|NO - one sentence of evidence
+c4: YES|NO - one sentence of evidence
+c5: YES|NO - one sentence of evidence
+usable_as_is: yes|no
+component: (empty if yes; else the component behind the first NO: c1 classifier, c2 sla, c3 routing, c4 policy, c5 retrieval)
