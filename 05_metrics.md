@@ -6,11 +6,11 @@
 
 | Level | Question | Our metric | Value today | Produced by | Owner | Clock |
 |---|---|---|---|---|---|---|
-| 5 Business | Does it move the P&L? | SLA penalties avoided (€ / year) | Not yet. Base hypothesis €81,000 in year 1 (Inputs D68) | Online A/B, then monitoring of breaches and penalties | Head of Support, with Finance | Quarterly |
-| 4 Product | Do engineers adopt it and get the job done? | Share of P3/P4 triages that engineers accept unchanged in the console | Not yet (no live users). Offline proxy: level 2 | Console audit log (accept vs change) | Support team lead | Weekly |
+| 5 Business | Does it move the P&L? | SLA penalties avoided (€ / year) | Not yet. Base hypothesis €81,000 in year 1 (Inputs D68) | Online A/B, then monitoring of breaches and penalties | Head of Support | Quarterly |
+| 4 Product | Do engineers adopt it and get the job done? | Share of P3/P4 triages that engineers accept unchanged in the console | Not yet (no live users). Offline proxy: level 2 | Console audit log (accept vs change) | Support lead | Weekly |
 | 3 Guardrails & responsible AI | Does it stay inside the lines, for everyone? | Priority lowered below the declared priority; P1 recall by language and tier | Lowered: **0 / 50**. P1 recall: EN 8/10, FR 3/4, Enterprise 9/10, Standard 2/4 | Offline eval-set, then daily monitoring | Head of Support | Daily |
-| 2 AI system | Does the workflow complete the task? | **P3/P4 triages both graders accept unchanged** | **2 / 17 = 11.8 %** (criterion ≥ 62 %) | Eval-set + two graders | AI product owner (team) | Every release (hours) |
-| 1 Model | Is the component right? | Severity classifier: P1 recall; severity accuracy | **11 / 14 = 78.6 %**; 33 / 50 = 66 % | Offline eval-set | AI product owner (team) | Every commit (seconds) |
+| 2 AI system | Does the workflow complete the task? | **P3/P4 triages both graders accept unchanged** | **2 / 17 = 11.8 %** (criterion ≥ 62 %) | Eval-set + two graders | AI product team (Team 8) | Every release (hours) |
+| 1 Model | Is the component right? | Severity classifier: P1 recall; severity accuracy | **11 / 14 = 78.6 %**; 33 / 50 = 66 % | Offline eval-set | AI product team (Team 8) | Every commit (seconds) |
 
 Supporting level-1 numbers from the same run: team accuracy 17/50 = 34 %, effective-priority accuracy 29/50 = 58 %, expected source in top 3 14/34 = 41 %, handover agreement 46/50 = 92 %, false-P1 rate 7/28 = 25 %.
 
@@ -31,12 +31,12 @@ Supporting level-1 numbers from the same run: team accuracy 17/50 = 34 %, effect
 
 | Kind | Metric | Numerator / denominator | Level | Lag | Source & owner |
 |---|---|---|---|---|---|
-| Primary (1) | P3/P4 triages accepted unchanged | P3/P4 triages accepted without any change ÷ P3/P4 triages proposed. Abstentions stay in the denominator | 4 (offline proxy at level 2: 11.8 %) | Weekly | Console audit log · Support team lead |
+| Primary (1) | P3/P4 triages accepted unchanged | P3/P4 triages accepted without any change ÷ P3/P4 triages proposed. Abstentions stay in the denominator | 4 (offline proxy at level 2: 11.8 %) | Weekly | Console audit log · Support lead |
 | Guardrail | P1 recall | Tickets proposed P1 ÷ tickets an engineer confirms as P1 at closure | 3 | Days (P1 confirmed at closure) | Eval-set + ticketing tool · Head of Support |
 | Guardrail | Never lowered | Tickets whose effective priority < declared priority without an engineer reason ÷ all triaged tickets | 3 | Real time | Audit log (`POST /api/action`) · Head of Support |
-| Guardrail | False-P1 rate | Proposed P1 not confirmed as P1 ÷ tickets that are not P1 (offline target ≤ 15 %; today 25 %) | 3 | Days | Eval-set + ticketing tool · Support team lead |
-| Counter-metric | SLA breach rate | SLA breaches ÷ tickets, compared with the 240 breaches a year baseline (sizing How-to B48) | 5 | Months (penalties are invoiced later) | Ticketing tool, contracts · Head of Support with Finance |
-| Counter-metric | Human-triage share | Outputs routed to "Human triage" ÷ all outputs (today 31/50) | 4 | Weekly | Console audit log · Support team lead |
+| Guardrail | False-P1 rate | Proposed P1 not confirmed as P1 ÷ tickets that are not P1 (offline target ≤ 15 %; today 25 %) | 3 | Days | Eval-set + ticketing tool · Support lead |
+| Counter-metric | SLA breach rate | SLA breaches ÷ tickets, compared with the 240 breaches a year baseline (sizing How-to B48) | 5 | Months (penalties are invoiced later) | Ticketing tool, contracts · Head of Support |
+| Counter-metric | Human-triage share | Outputs routed to "Human triage" ÷ all outputs (today 31/50) | 4 | Weekly | Console audit log · Support lead |
 
 - **Segments reported** (from the S3 audit in `governance.md`): severity (P1 / P2 / P3 / P4 / ABSTAIN), language (EN / FR / other), tier (Enterprise / Standard). Never one global number.
 - **Fairness metric:** **equal error rates across segments**, read on P1 recall and the false-P1 rate. Today they are not equal:
