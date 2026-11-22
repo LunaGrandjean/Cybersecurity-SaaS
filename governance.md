@@ -76,6 +76,10 @@
 - [Review instructions](evals/VALIDATION_EQUIPE.md): proposed split Jane E001–E017, Malek E018–E034, Luna E035–E050. `prototype.import_review` requires explicit decisions/names/dates, rejects changed original inputs and writes a separate reviewed CSV without inference. These fields record the reviewers' assertions; the script cannot establish that a real review occurred.
 - The official 50 inputs remain unpredicted by these technical checks. Two people must independently grade all 50 outputs after the actual label review and freeze; the review split is not a substitute for two graders.
 
-## Session 5 — counter-metrics and the segments we report (to come)
+## Session 5 — counter-metrics and the segments we report
+*22 November 2026 · details in `05_metrics.md` §3.*
+- **Counter-metrics:** SLA breach rate (baseline 240 breaches a year) and the share of outputs routed to "Human triage" (31/50 on run v0).
+- **Segments reported, never one global number:** severity (P1–P4, ABSTAIN), language (EN / FR / other), tier (Enterprise / Standard). Fairness metric: equal error rates (P1 recall and false-P1 rate) across language and tier.
+- **Harm threshold that stops the rollout:** any confirmed P1 that the agent proposed below P1, in any segment, or any priority lowered below the declared one without an engineer reason. Consequence: the agent goes back to suggestions-only mode the same day. **Owner: Head of Support**, who holds the ⏻ switch.
 ## Session 6 — protected segments and the harm threshold that stops an experiment (to come)
 ## Session 7 — accountable owner, rollback authority, incident path (to come)
