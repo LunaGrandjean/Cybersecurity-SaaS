@@ -1,4 +1,4 @@
-# 06_07 — Experiments & operation · Team 8 · SLA-aware triage copilot (P7)
+# 06_07 — Experiments & operations · Team 8 · SLA-aware triage copilot (P7)
 
 > Sessions 6 + 7 deliverable, 23 November 2026. Every number traces to `02_sizing_CyberSaas.xlsx` (cell given), `05_metrics.md` or `evals/report_v0.md`. A value that is our own decision is marked *(decision)*. Every owner is a role from our proposal. Every threshold has a clock.
 >
@@ -54,7 +54,7 @@
 | Model quality | P1 recall and false-P1 rate on the frozen `eval_set_v1.csv`; judge score on a weekly sample | P1 recall < 100 % or false-P1 > 15 % on any re-run | Weekly and on every release | AI product team (Team 8) | Phoenix (self-hosted) | Langfuse self-hosted |
 | Product & guardrails | Priority lowered below declared; P3/P4 accepted unchanged; human-triage share | **Any** lowered priority → page now; human-triage share above 31/50 for a week | Daily (lowered: real time) | Support lead | SQLite / Postgres table + Metabase | Warehouse + Power BI |
 | Business | SLA breaches per month against 20 a month (240 / 12); penalties € | Breaches above last year's same month | Monthly | Head of Support | Weekly query + sheet | BI dashboard |
-| Paging | — | — | — | Head of Support (day), on-call support engineer (rotation) (night) | Slack / Teams webhook | PagerDuty / Opsgenie |
+| Paging | — | — | — | Head of Support by day,on-call support engineer (rotation) by night | Slack / Teams webhook | PagerDuty / Opsgenie |
 
 All tools are self-hosted or in our own cloud tenant: security customers refuse logs leaving our perimeter (P7 brief; `governance.md` S1).
 
