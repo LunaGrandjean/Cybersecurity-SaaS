@@ -76,6 +76,13 @@
 - [Review instructions](evals/VALIDATION_EQUIPE.md): proposed split Jane E001–E017, Malek E018–E034, Luna E035–E050. `prototype.import_review` requires explicit decisions/names/dates, rejects changed original inputs and writes a separate reviewed CSV without inference. These fields record the reviewers' assertions; the script cannot establish that a real review occurred.
 - The official 50 inputs remain unpredicted by these technical checks. Two people must independently grade all 50 outputs after the actual label review and freeze; the review split is not a substitute for two graders.
 
-## Session 5 — counter-metrics and the segments we report (to come)
-## Session 6 — protected segments and the harm threshold that stops an experiment (to come)
-## Session 7 — accountable owner, rollback authority, incident path (to come)
+## Session 5 — counter-metrics and the segments we report
+*22 November 2026 · details in `05_metrics.md` §3.*
+- **Counter-metrics:** SLA breach rate (baseline 240 breaches a year) and the share of outputs routed to "Human triage" (31/50 on run v0).
+- **Segments reported, never one global number:** severity (P1–P4, ABSTAIN), language (EN / FR / other), tier (Enterprise / Standard). Fairness metric: equal error rates (P1 recall and false-P1 rate) across language and tier.
+- **Harm threshold that stops the rollout:** any confirmed P1 that the agent proposed below P1, in any segment, or any priority lowered below the declared one without an engineer reason. Consequence: the agent goes back to suggestions-only mode the same day. **Owner: Head of Support**, who holds the ⏻ switch.
+## Sessions 6 + 7 — experiments, switch and trace
+*23 November 2026 · details in `06_07_experiments_operations.md`.*
+- **Experiments on real users:** any experiment on real support engineers and live tickets is signed by the **Head of Support** and read by the **DPO** before it starts. The decision rule (ship / iterate / kill) and the harm threshold (Session 5) were written on 23 November 2026, before the first unit (06_07 §2). Pre-registered segments: severity, language, tier.
+- **The switch:** the **Head of Support** can move the system to suggestions-only or off by day, the **on-call engineering lead** by night; either one is enough. Last tested 22 November 2026 by Malek Saoudi on the local prototype (7/7 checks); next test before the pilot starts, then monthly.
+- **The trace:** one trace per ticket (spans: request → redact → account_sla → classify → rules → retrieve → route → policy → human_decision), kept for 12 months *(decision: one contract year, so that any SLA penalty dispute can be answered)* in a self-hosted store inside our tenant. The **Head of Support** answers a customer or a regulator from it, with the **DPO** for personal data. The company answers for what the system proposes (Moffatt v. Air Canada, 2024).

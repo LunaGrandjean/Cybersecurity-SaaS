@@ -27,7 +27,7 @@ Counts are cases that grader A marked `no`; grader B's counts are the same excep
 |---|---|---|---|
 | 17 / 50 | **Wrong severity.** 3 real P1s proposed as P3/P4 (E003 recovery address replaced, E012 contractor admin access kept, E015 cross-tenant data visible); 7 false P1s on P2–P4 tickets (E004, E017, E024, E035, E039, E049, E050); 6 of 8 ABSTAIN cases get a severity (E041, E042, E045, E046, E047, E048) | `classifier` | EVAL-01, EVAL-02, EVAL-03 |
 | 16 / 50 | **Effective priority not raised.** Severity is often right, but the effective priority stays at the declared priority (e.g. E007 and E011: expected P1, left at P4). The run shows 0 automatic raises in assisted mode | `sla` / raise rule | EVAL-04 |
-| 9 / 50 | **Team left to "Human triage"** although the expected answer names a team (E008, E016, E018, E022, E026, E033, E034, E036, E038); 26 of the 50 outputs go to Human triage overall | `routing` | EVAL-05 |
+| 9 / 50 | **Team left to "Human triage"** although the expected answer names a team (E008, E016, E018, E022, E026, E033, E034, E036, E038); 31 of the 50 outputs go to Human triage overall, 24 of them where a named team was expected | `routing` | EVAL-05 |
 
 Single misses: E029 sends to a person a ticket that needs no handover (`policy`); E030 cites an irrelevant source, KB-DET-01, instead of KB-INT-01 (`retrieval`).
 
