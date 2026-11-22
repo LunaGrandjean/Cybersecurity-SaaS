@@ -1,0 +1,31 @@
+﻿case_id,grader,usable_as_is,reason,component
+E001,Luna Grandjean,no,"Missed P1: effective priority stayed at P3 instead of being raised to P1, and the team is Identity rather than Incident Response",sla
+E004,Luna Grandjean,no,"Severity is P1 where P2 was expected, and the team is Human triage rather than Platform",classifier
+E005,Luna Grandjean,no,"Missed P1: effective priority stayed at P3 instead of P1 for a customer data extortion case, and the team is Endpoint rather than Incident Response",sla
+E007,Luna Grandjean,no,"Missed P1: effective priority stayed at P4 instead of being raised to P1 for a credential-phishing redirect, and the team is Human triage rather than Incident Response",sla
+E008,Luna Grandjean,no,"Severity and effective priority are correct and sources are relevant, but the team is Human triage rather than Incident Response",routing
+E010,Luna Grandjean,no,"Missed P1: effective priority stayed at P2 instead of being raised to P1 for a SOC visibility outage, and the team is Human triage rather than Platform",sla
+E011,Luna Grandjean,no,"Missed P1: effective priority stayed at P4 instead of P1 for tamper protection disabled across all servers, and the team is Human triage rather than Endpoint",sla
+E012,Luna Grandjean,no,"Severity is P3 where P1 was expected for an unrecognised admin session after contractor access persisted, and the team is Identity rather than Incident Response",classifier
+E014,Luna Grandjean,no,"Missed P1: effective priority stayed at P2 instead of being raised to P1 for an emergency dispatch outage, and the team is Human triage rather than Detection Engineering",sla
+E017,Luna Grandjean,no,"Severity is P1 where P2 was expected, effective priority was not raised to P2, the team is Human triage rather than Integrations, and no source is cited",classifier
+E018,Luna Grandjean,no,"Severity and effective priority are correct and sources are relevant, but the team is Human triage rather than Detection Engineering",routing
+E020,Luna Grandjean,yes,"Severity P2, effective P1, team Awareness module, handover yes and relevant sources all match the expected output",
+E021,Luna Grandjean,no,"Effective priority was not raised to the expected P2 for slow policy sync, and the team is Human triage rather than Endpoint with no source cited",sla
+E022,Luna Grandjean,no,"Severity and effective priority are correct and a relevant source is cited, but the team is Reporting rather than Integrations",routing
+E025,Luna Grandjean,no,"Effective priority is P3 where the expected P2 required a raise for a blank tenant-wide health dashboard",sla
+E028,Luna Grandjean,yes,"Severity P3, effective P1, team Detection Engineering, handover yes and relevant sources all match the expected output",
+E029,Luna Grandjean,no,"Handover is yes where the expected answer is no, since a routine reporting issue with a workaround does not need a human",policy
+E030,Luna Grandjean,yes,"Severity P3, effective P2, team Integrations and handover yes match the expected output, and the cited source is plausibly related to the connector",
+E031,Luna Grandjean,no,"Effective priority stayed at P4 where P3 was expected, the team is Human triage rather than Platform, and handover is yes rather than no",sla
+E033,Luna Grandjean,no,"Team is Human triage rather than Reporting and handover is yes where no was expected, with no source cited",routing
+E035,Luna Grandjean,no,"Severity is P1 where P3 was expected for an obsolete display name on a healthy endpoint",classifier
+E039,Luna Grandjean,no,"Severity is P1 where P4 was expected for a billing-contact question, and the team is Human triage rather than Account Management",classifier
+E040,Luna Grandjean,no,"Severity is P2 where P4 was expected for a documentation question, and the team is Platform rather than Customer Success",classifier
+E042,Luna Grandjean,no,"Severity P3 was assigned where the expected output is ABSTAIN for an unreadable attachment with no context",classifier
+E043,Luna Grandjean,yes,"ABSTAIN severity, effective P4, Human triage and handover yes match the expected output, and no invented fact is present",
+E044,Luna Grandjean,yes,"ABSTAIN severity, effective P1, Human triage and handover yes match the expected output, and the cited source does not invent facts",
+E045,Luna Grandjean,no,"Severity P1 was assigned where the expected output is ABSTAIN for a social-engineering request, and the team is Human triage rather than Identity",classifier
+E047,Luna Grandjean,no,"Severity P4 was assigned where ABSTAIN was expected, and the cited source is the other customer's resolution, which should not be surfaced",classifier
+E049,Luna Grandjean,no,"Severity is P1 where P4 was expected for a planned exercise, and the team is Incident Response rather than Customer Success",classifier
+E050,Luna Grandjean,no,"Severity is P1 where P4 was expected for a holiday support schedule question, and the team is Human triage rather than Customer Success",classifier

@@ -1,0 +1,31 @@
+﻿case_id,grader,usable_as_is,reason,component
+E001,Malek Saoudi,no,"Effective priority stays P3 where P1 is expected, and the team is Identity instead of Incident Response.",sla
+E004,Malek Saoudi,no,"Severity is P1 where P2 is expected, and the team is Human triage instead of Platform.",classifier
+E005,Malek Saoudi,no,"Effective priority stays P3 where P1 is expected for a customer data extortion, and the team is Endpoint instead of Incident Response.",sla
+E007,Malek Saoudi,no,"Effective priority stays P4 where P1 is expected for a suspected credential phishing portal, and the team is Human triage instead of Incident Response.",sla
+E008,Malek Saoudi,no,"Severity, priority and handover are correct, but the team is Human triage instead of Incident Response for active remote commands on production servers.",routing
+E010,Malek Saoudi,no,"Effective priority stays P2 where P1 is expected for a blind SOC across three regions, and the team is Human triage instead of Platform.",sla
+E011,Malek Saoudi,no,"Effective priority stays P4 where P1 is expected for tamper protection disabled on every server, and the team is Human triage instead of Endpoint.",sla
+E012,Malek Saoudi,no,"Severity is P3 where P1 is expected for an unrevoked contractor admin session, and the team is Identity instead of Incident Response.",classifier
+E014,Malek Saoudi,no,"Effective priority stays P2 where P1 is expected for a fleet-wide access outage to emergency dispatch, and the team is Human triage instead of Detection Engineering.",sla
+E017,Malek Saoudi,no,"Severity is P1 where P2 is expected, effective priority stays P3 where P2 is expected, the team is Human triage instead of Integrations, and no source is cited.",classifier
+E018,Malek Saoudi,no,"Severity, priority and handover are correct, but the team is Human triage instead of Detection Engineering for the allow-list editor.",routing
+E020,Malek Saoudi,yes,"Severity P2 with effective P1, Awareness module team, handover and cited sources all match the expected outcome for a non-production exercise duplicate.",
+E021,Malek Saoudi,no,"Effective priority stays P3 where P2 is expected for a slow policy sync affecting a department, the team is Human triage instead of Endpoint, and no source is cited.",sla
+E022,Malek Saoudi,no,"Severity, priority and handover are correct, but the team is Reporting instead of Integrations for a log-forwarding connector failure.",routing
+E025,Malek Saoudi,no,"Effective priority stays P3 where P2 is expected for a blank tenant health dashboard, although the team, severity and handover are correct.",sla
+E028,Malek Saoudi,yes,"Severity P3, effective P1, Detection Engineering team, handover and sources all match the expected outcome for a quarantined signed test file.",
+E029,Malek Saoudi,no,"Severity, priority and team are correct, but handover is yes where no human handover is expected for a non-urgent report column issue with a workaround.",policy
+E030,Malek Saoudi,no,"Severity, priority, team and handover are correct, but the only cited source KB-DET-01 is a detection article that does not address a mail connector failure, so the grounding is not relevant.",retrieval
+E031,Malek Saoudi,no,"Effective priority is P4 where P3 is expected, handover is yes where no handover is expected, and the team is Human triage instead of Platform.",sla
+E033,Malek Saoudi,no,"Severity, priority and handover fit the expected low-impact chart issue, but the team is Human triage instead of Reporting and no source is cited, so the handover and routing are wrong.",routing
+E035,Malek Saoudi,no,"Severity is P1 where P3 is expected for an obsolete display name with all protection healthy, and effective priority P4 is also below the expected P3.",classifier
+E039,Malek Saoudi,no,"Severity is P1 where P4 is expected for a billing contact change, and the team is Human triage instead of Account Management.",classifier
+E040,Malek Saoudi,no,"Severity is P2 where P4 is expected for a documentation question, and the team is Platform instead of Customer Success.",classifier
+E042,Malek Saoudi,no,"The case should abstain on severity because the attachment has no explanation, but the agent assigned P3.",classifier
+E043,Malek Saoudi,yes,"Agent correctly abstains on severity, keeps effective P4, and routes to Human triage with handover, which matches the expected outcome.",
+E044,Malek Saoudi,yes,"Agent correctly abstains on severity, keeps effective P1, routes to Human triage with handover, and cites a relevant source.",
+E045,Malek Saoudi,no,"The case should abstain on severity because of a social-engineering request, but the agent assigned P1 and routed to Human triage instead of Identity.",classifier
+E047,Malek Saoudi,no,"The case should abstain on severity, but the agent assigned P4, and the cited INC-OR-01 record may expose another customer's resolution, which also needs redaction review.",classifier
+E049,Malek Saoudi,no,"Severity is P1 where P4 is expected for a planned exercise with no real encryption, and the team is Incident Response instead of Customer Success.",classifier
+E050,Malek Saoudi,no,"Severity is P1 where P4 is expected for a holiday on-call schedule question with no incident, and the team is Human triage instead of Customer Success.",classifier
