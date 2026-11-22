@@ -50,11 +50,11 @@
 
 | Layer | Metric (from `05_metrics.md`) | Threshold that pages someone | Clock | Owner | Tool — startup | Tool — large company |
 |---|---|---|---|---|---|---|
-| Infrastructure | Triage API up, latency, error rate | API unreachable for 5 min *(decision: well inside the 1 h P1 SLA)* → automatic fallback to manual triage | Real time | Platform on-call engineer | Container health checks + Grafana Cloud | Cloud Monitoring / Azure Monitor + Datadog |
-| Model quality | P1 recall and false-P1 rate on the frozen `eval_set_v1.csv`; judge score on a weekly sample | P1 recall < 100 % or false-P1 > 15 % on any re-run | Weekly and on every release | AI product owner | Phoenix (self-hosted) | Langfuse self-hosted |
-| Product & guardrails | Priority lowered below declared; P3/P4 accepted unchanged; human-triage share | **Any** lowered priority → page now; human-triage share above 31/50 for a week | Daily (lowered: real time) | Support team lead | SQLite / Postgres table + Metabase | Warehouse + Power BI |
-| Business | SLA breaches per month against 20 a month (240 / 12); penalties € | Breaches above last year's same month | Monthly | Head of Support, with Finance | Weekly query + sheet | BI dashboard |
-| Paging | — | — | — | Head of Support (day), on-call engineering lead (night) | Slack / Teams webhook | PagerDuty / Opsgenie |
+| Infrastructure | Triage API up, latency, error rate | API unreachable for 5 min *(decision: well inside the 1 h P1 SLA)* → automatic fallback to manual triage | Real time | On-call support engineer (rotation) | Container health checks + Grafana Cloud | Cloud Monitoring / Azure Monitor + Datadog |
+| Model quality | P1 recall and false-P1 rate on the frozen `eval_set_v1.csv`; judge score on a weekly sample | P1 recall < 100 % or false-P1 > 15 % on any re-run | Weekly and on every release | AI product team (Team 8) | Phoenix (self-hosted) | Langfuse self-hosted |
+| Product & guardrails | Priority lowered below declared; P3/P4 accepted unchanged; human-triage share | **Any** lowered priority → page now; human-triage share above 31/50 for a week | Daily (lowered: real time) | Support lead | SQLite / Postgres table + Metabase | Warehouse + Power BI |
+| Business | SLA breaches per month against 20 a month (240 / 12); penalties € | Breaches above last year's same month | Monthly | Head of Support | Weekly query + sheet | BI dashboard |
+| Paging | — | — | — | Head of Support (day), on-call support engineer (rotation) (night) | Slack / Teams webhook | PagerDuty / Opsgenie |
 
 All tools are self-hosted or in our own cloud tenant: security customers refuse logs leaving our perimeter (P7 brief; `governance.md` S1).
 
@@ -103,7 +103,7 @@ Built with Metabase on the audit table (Grafana for the infrastructure tiles).
 | Field | Ours |
 |---|---|
 | 1 · Trigger | The harm threshold of `governance.md` (one confirmed P1 proposed below P1, or one lowered priority), **or** an API outage of 5 min, **or** a P1-recall page from the weekly re-run |
-| 2 · Who decides (day / night) | Head of Support by day; on-call engineering lead by night. Either one is enough; nobody needs a second approval to switch off |
+| 2 · Who decides (day / night) | Head of Support by day; on-call support engineer (rotation) by night. Either one is enough; nobody needs a second approval to switch off |
 | 3 · The action | Step 1: **suggestions-only** (`POST /api/switch`, from the console header). Step 2 if needed: engine off, manual triage only. Step 3: redeploy the previous engine version from the release tag |
 | 4 · Time to execute | The switch itself: 0.003 s measured. Target from page to switched: under 15 min |
 | 5 · What people see | Engineers see a "suggestions only" banner and no automatic raises; acceptance needs a recorded review. Priorities already raised are kept, nothing is downgraded. Customers see nothing, because the agent never contacts them |
@@ -114,7 +114,7 @@ Built with Metabase on the audit table (Grafana for the infrastructure tiles).
 | Decision | Owner (role) | Written where |
 |---|---|---|
 | Run an experiment on real users | **Head of Support** signs; the **DPO** reads the protocol before the first unit | This file §1–§2 · `governance.md` S6–7 |
-| Read the weekly numbers and act | **Support team lead** (product and guardrails); **AI product owner** (model quality) | §3 |
-| Press the switch (day / night) | **Head of Support** by day · **on-call engineering lead** by night | §4 · `governance.md` S4 and S6–7 · `04_architecture.md` §6 |
-| Approve a release (rules, classifier, sources, routing) | **AI product owner**, after the staging gates; **Head of Support** co-signs any change of mode | `evals/README.md` · §3 release path |
+| Read the weekly numbers and act | **Support lead** (product and guardrails); **AI product team (Team 8)** (model quality) | §3 |
+| Press the switch (day / night) | **Head of Support** by day · **on-call support engineer (rotation)** by night | §4 · `governance.md` S4 and S6–7 · `04_architecture.md` §6 |
+| Approve a release (rules, classifier, sources, routing) | **AI product team (Team 8)**, after the staging gates; **Head of Support** co-signs any change of mode | `evals/README.md` · §3 release path |
 | Keep the trace; answer a customer or a regulator | **Head of Support** answers; the **DPO** handles any personal-data request. The company answers for what the system proposes (Moffatt v. Air Canada, 2024) | `governance.md` S6–7 |
