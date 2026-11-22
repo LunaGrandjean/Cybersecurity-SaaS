@@ -60,7 +60,8 @@ A fixed workflow: the code chooses the stages in advance. The model never select
 - Scope: all new tickets. Existing raised priorities and human decisions are preserved; switching off must not downgrade them. Acceptance of existing tickets in suggestions mode requires a recorded human review.
 - Persistence: SQLite setting, with timestamp/operator/reason in audit.
 - Local operator names are self-declared; no authentication or production authorisation is implemented. Bind loopback only.
-- Engineering test evidence: see `evals/engineering_checks.md`. Team-operated acceptance test and sign-off: **pending**.
+- Engineering test evidence: see `evals/engineering_checks.md`.
+- Team test: **22 November 2026, 01:20 (UTC+01:00), operated by Malek Saoudi** on the local prototype (`python -m prototype.switch_drill --operator "Malek Saoudi"`); 7/7 checks passed. Switching assisted → suggestions took 0.003 s, new tickets were no longer raised, the earlier raised ticket stayed at P1, acceptance was blocked until a human review, both switch actions were audited with the operator, and the mode persisted after restart. Evidence: `evals/switch_drills/drill_2026-11-22_012010.json`. Next test: before every release, and at least monthly.
 
 ## 7. Data and leakage
 | File | Purpose | Status |

@@ -1,0 +1,44 @@
+{
+  "drill_at": "2026-11-22T01:20:10+01:00",
+  "operator": "Malek Saoudi",
+  "database": "prototype\\runtime\\drill-20261122-012010\\drill.sqlite3",
+  "switch_seconds": 0.003,
+  "passed": true,
+  "checks": [
+    {
+      "check": "assisted mode raises a suspected P1",
+      "passed": true,
+      "detail": "declared P3 -> effective P1"
+    },
+    {
+      "check": "switch executes in under 15 minutes",
+      "passed": true,
+      "detail": "0.003 s"
+    },
+    {
+      "check": "after switch, new tickets are suggestions only (no raise)",
+      "passed": true,
+      "detail": "proposed P1, effective P3"
+    },
+    {
+      "check": "existing ticket is not downgraded by the switch",
+      "passed": true,
+      "detail": "earlier ticket still P1"
+    },
+    {
+      "check": "acceptance is blocked until a human review is recorded",
+      "passed": true,
+      "detail": "accept without review rejected"
+    },
+    {
+      "check": "both switch actions are in the audit log with operator and reason",
+      "passed": true,
+      "detail": "2 switch events"
+    },
+    {
+      "check": "suggestions mode persists after restart",
+      "passed": true,
+      "detail": "mode after reopen: suggestions"
+    }
+  ]
+}
