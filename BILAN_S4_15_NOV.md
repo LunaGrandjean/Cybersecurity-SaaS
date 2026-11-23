@@ -1,5 +1,7 @@
 # Bilan S4 — 15 novembre 2026
 
+> Historical 15 November snapshot. Current state: [FINALISATION.md](FINALISATION.md), [launch decision](08_launch_memo.md) and [evaluation report](evals/report_v0.md). The pending items below describe that date, not current evaluation status.
+
 **Etat : prototype fonctionnel et documents prepares ; validation humaine et rendu Git a terminer.** Aucun grade ni entretien n'a ete attribue fictivement a Jane, Malek ou Luna.
 
 ## Ce qui est fait

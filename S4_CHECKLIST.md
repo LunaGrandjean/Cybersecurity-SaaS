@@ -1,5 +1,7 @@
 # Assignment 4 handoff — 15 November 2026, 23:59
 
+> Historical 15 November snapshot. Current state: [FINALISATION.md](FINALISATION.md), [launch decision](08_launch_memo.md) and [evaluation report](evals/report_v0.md). The pending items below describe that date, not current evaluation status.
+
 ## Built in this working tree
 - Functional local console derived from Jane's v0.2; new-ticket API, classifier, rules, retrieval, manual correction, SQLite audit and global suggestions-only switch.
 - 300 synthetic training rows: P1 70 / P2 75 / P3 90 / P4 65; AI-proposed labels clearly identified.

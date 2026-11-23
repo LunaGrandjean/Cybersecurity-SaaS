@@ -50,6 +50,9 @@ function render() {
   const t = ticket();
   if (!t) { $("#copilot").innerHTML = ""; updateClocks(); return; }
   const a = t.triage;
+  // CALM-01 returns the chosen non-P1 class score; the initial label is kept
+  // separately. Do not display that score as if it belonged to the initial P1.
+  const scoredClass = a.evidence.some(e => e.rule === "CALM-01") ? a.proposed_severity : (a.classifier_severity || a.proposed_severity);
   $("#detail").innerHTML = `<div class="meta">${t.id} · ${escapeHtml(a.account)} · customer declared ${badge(a.declared_priority)}</div>
     <h2>${escapeHtml(t.title)}</h2><p class="explanation">Opened ${escapeHtml(new Date(a.created_at).toLocaleString())}; the SLA always starts at this timestamp.</p>
     <div class="msg">${escapeHtml(a.redacted_text)}</div><p class="redact-note">${a.redaction.count} item(s) masked before local analysis and storage. Best-effort demo redaction.</p>
@@ -61,7 +64,7 @@ function render() {
     ${hidden ? '<p class="taken">Engineer has taken over. Automatic proposal hidden; manual controls remain available.</p>' : `
       <p>Model/rule suggestion: ${badge(a.proposed_severity)}</p><p>${escapeHtml(a.reason)}</p>
       ${a.evidence.map(e => `<div class="raised"><strong>${escapeHtml(e.rule)}</strong> · ${escapeHtml(e.source)}<br>“${escapeHtml(e.quote)}”</div>`).join("")}
-      <p class="explanation">${a.classifier_score === null ? "No classifier score available." : `Classifier output ${escapeHtml(a.classifier_severity || a.proposed_severity)}: ${Math.round(a.classifier_score * 100)}%.`} ${escapeHtml(a.score_note)}</p>`}
+      <p class="explanation">${a.classifier_score === null ? "No classifier score available." : `Model score for class ${escapeHtml(scoredClass)}: ${Math.round(a.classifier_score * 100)}%.`} ${escapeHtml(a.score_note)}</p>`}
     <dl><dt>SLA clock</dt><dd data-clock="${t.id}"></dd><dt>Team</dt><dd>${escapeHtml(a.team)}</dd><dt>Human verification</dt><dd>${t.human_checked ? "Recorded" : "Not recorded"}</dd></dl>
     ${a.review_reasons.length ? `<div class="held"><strong>Human review</strong><ul>${a.review_reasons.map(r => `<li>${escapeHtml(r)}</li>`).join("")}</ul></div>` : ""}</div>
     ${hidden ? "" : `<div class="similar"><h4>Reusable sources · same customer or generic KB</h4>

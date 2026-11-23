@@ -9,8 +9,10 @@ import argparse
 import csv
 import hashlib
 import json
+import platform
 from collections import Counter
 from datetime import datetime, timezone
+from importlib.metadata import version
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +26,37 @@ def read_csv(path):
 
 def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def runtime_provenance():
+    """Record enough source/data/runtime detail for future reproduction."""
+    prototype = Path(__file__).parent
+    versions = {"python": platform.python_version(),
+                **{name: version(name) for name in ("scikit-learn", "numpy", "scipy")}}
+    files = [prototype / "data" / name for name in ("training_tickets.csv", "knowledge_base.json", "accounts.json")]
+    files.append(prototype / "engine.py")
+    material = b"".join(p.read_bytes() for p in files)
+    runtime_bytes = "|".join(versions[name] for name in ("python", "scikit-learn", "numpy", "scipy")).encode()
+    return {"versions": versions,
+            "file_sha256": {str(p.relative_to(ROOT)).replace("\\", "/"): digest(p) for p in files},
+            "model_version": hashlib.sha256(material + runtime_bytes).hexdigest()[:16]}
+
+
+def digest_match(path, expected):
+    """Accept exact bytes or LF/CRLF conversion only, never other edits.
+
+    Historical manifests used Windows text-mode bytes before Git converted
+    line endings. Keep those manifests unchanged and compare only equivalent
+    newline encodings; no JSON reformatting or whitespace stripping is allowed.
+    """
+    raw = Path(path).read_bytes()
+    if hashlib.sha256(raw).hexdigest() == expected:
+        return "exact"
+    lf = raw.replace(b"\r\n", b"\n")
+    if any(hashlib.sha256(candidate).hexdigest() == expected
+           for candidate in (lf, lf.replace(b"\n", b"\r\n"))):
+        return "line_endings_only"
+    return None
 
 
 def validate(cases):
@@ -78,7 +111,8 @@ def freeze(cases_path, run_dir):
         raise ValueError("Manifest already exists. Keep this run immutable; use a new run directory.")
     manifest = {"frozen_at": datetime.now(timezone.utc).isoformat(), "cases_sha256": digest(cases_path),
                 "cases": len(cases), "model_version": engine.model_version,
-                "mode": "assisted", "human_labels_required": True, "predictions_exposed": False}
+                "mode": "assisted", "human_labels_required": True, "predictions_exposed": False,
+                "runtime_provenance": runtime_provenance()}
     target.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest
 
@@ -94,7 +128,7 @@ def run(cases_path, run_dir):
     manifest = json.loads(manifest_path.read_text())
     from .engine import TriageEngine
     engine = TriageEngine()
-    if manifest["cases_sha256"] != digest(cases_path) or manifest["model_version"] != engine.model_version:
+    if not digest_match(cases_path, manifest["cases_sha256"]) or manifest["model_version"] != engine.model_version:
         raise ValueError("Frozen cases or model changed. Do not tune on this holdout; create a fresh run and fresh cases.")
     if (run_dir / "predictions.json").exists():
         raise ValueError("This run already has predictions. Preserve it; do not silently overwrite.")
@@ -115,10 +149,10 @@ def run(cases_path, run_dir):
     return {"predictions": len(predictions), "status": "Awaiting two independent human graders"}
 
 
-def summarise(cases_path, run_dir):
+def summarise(cases_path, run_dir, write=True):
     cases = read_csv(cases_path)
     manifest = json.loads((run_dir / "manifest.json").read_text())
-    if digest(cases_path) != manifest["cases_sha256"] or digest(run_dir / "predictions.json") != manifest["predictions_sha256"]:
+    if not digest_match(cases_path, manifest["cases_sha256"]) or not digest_match(run_dir / "predictions.json", manifest["predictions_sha256"]):
         raise ValueError("Frozen labels/predictions were modified; do not publish this run.")
     outputs = {p["case_id"]: p["output"] for p in json.loads((run_dir / "predictions.json").read_text(encoding="utf-8"))}
     grades = [read_csv(run_dir / f"grading_{g}.csv") for g in ("a", "b")]
@@ -178,7 +212,8 @@ def summarise(cases_path, run_dir):
     metrics["source_hit_at_3"] = {"hits": source_hits, "eligible": len(source_cases), "rate": rate(source_hits, len(source_cases))}
     metrics["verdict"] = "met" if (routine and accepted_routine / len(routine) >= .62 and critical and p1_found == len(critical) and (not noncritical or false_p1 / len(noncritical) <= .15)) else "not_met"
     metrics["handling_time_saved"] = "NOT MEASURED; acceptance is only a proxy based on unverified timing assumptions."
-    (run_dir / "metrics.json").write_text(json.dumps(metrics, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    if write:
+        (run_dir / "metrics.json").write_text(json.dumps(metrics, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return metrics
 
 
@@ -187,6 +222,7 @@ def main():
     parser.add_argument("action", choices=("validate", "freeze", "run", "summarise"))
     parser.add_argument("--cases", type=Path, default=DEFAULT_CASES)
     parser.add_argument("--run-dir", type=Path, default=ROOT / "evals" / "runs" / "v0")
+    parser.add_argument("--check-only", action="store_true", help="Recompute a summary without changing the recorded metrics.")
     args = parser.parse_args()
     try:
         if args.action == "validate":
@@ -194,7 +230,9 @@ def main():
             result = {"ready": not errors, "issues": errors}
             print(json.dumps(result, indent=2))
             return 1 if errors else 0
-        result = {"freeze": freeze, "run": run, "summarise": summarise}[args.action](args.cases, args.run_dir)
+        if args.check_only and args.action != "summarise":
+            raise ValueError("--check-only is available for summarise only.")
+        result = summarise(args.cases, args.run_dir, write=not args.check_only) if args.action == "summarise" else {"freeze": freeze, "run": run}[args.action](args.cases, args.run_dir)
         print(json.dumps(result, indent=2))
         return 0
     except (ValueError, FileNotFoundError) as error:

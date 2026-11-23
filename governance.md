@@ -46,11 +46,12 @@
 | 6. Customer update | person only (draft is a COULD) | a wrong statement to an enterprise client during an incident |
 
 ## Session 4 — human checkpoints and override switch
-**Implemented 12 November 2026, local synthetic-data demo; team acceptance sign-off pending.** This section records actual S4 behaviour and supersedes earlier S3 implementation assumptions where they differ.
+**Implemented 12 November 2026; updated for evaluated engine v0.5 on 23 November. Local synthetic-data scope only.** This section records actual S4 behaviour and supersedes earlier S3 implementation assumptions where they differ.
 
 | Checkpoint | Kind | Who / local behaviour |
 |---|---|---|
-| Unknown account/language, weak model score, insufficient context | Abstention/review | Engineer keeps manual triage; no classifier-driven auto-raise |
+| Unknown account/language or insufficient context | Abstention | Preserve declared priority and require a person |
+| Weak model score | Review | In v0.5 an eligible higher proposal may still raise in assisted synthetic mode; engineer review is required |
 | No reusable source | Abstention | No troubleshooting is invented; engineer checks the case |
 | P1/P2 and any priority reduction | Approval | Engineer records verification/reason before acceptance; API enforces this |
 | Privileged-access or legal request | Human-only handling | No access change or legal answer is executed |
@@ -72,17 +73,28 @@
 ### S4 technical update — 15 November 2026
 - Corrected missed development emergencies and source matching using only the exposed C01–C20 examples; preserved the initial diagnostic and reference bytes. [Comparison and limits](evals/ai_review/post_fix_2026_11_15/comparison.md). Three routing-ownership conventions still need agreement before freeze.
 - An explicitly suspected incident can raise in assisted mode even when the ticket also asks a legal question; the legal answer remains human-only. Privileged-change requests still block automatic raising. Every P1/P2 needs engineer review before acceptance. The default suggestions switch still blocks every automatic raise.
-- Automated verification: 29 code/API/protocol/import tests and 16 real-browser checks passed on 15 November; [evidence](evals/engineering_checks.md). Real team operator, date and switch acceptance sign-off remain **pending**; no operator identity is fabricated.
+- Automated verification: 29 code/API/protocol/import tests and 16 real-browser checks passed on 15 November; [evidence](evals/engineering_checks.md). This was the status on 15 November; the later seven-check team drill was recorded on 22 November by Malek Saoudi, as described above.
 - [Review instructions](evals/VALIDATION_EQUIPE.md): proposed split Jane E001–E017, Malek E018–E034, Luna E035–E050. `prototype.import_review` requires explicit decisions/names/dates, rejects changed original inputs and writes a separate reviewed CSV without inference. These fields record the reviewers' assertions; the script cannot establish that a real review occurred.
-- The official 50 inputs remain unpredicted by these technical checks. Two people must independently grade all 50 outputs after the actual label review and freeze; the review split is not a substitute for two graders.
+- The 15 November technical checks did not predict the official 50 inputs. The recorded evaluations and grades were added on 22 November; their method and limitations are in `evals/report_v0.md`. Reference annotation and grading outputs remain different tasks.
 
 ## Session 5 — counter-metrics and the segments we report
 *22 November 2026 · details in `05_metrics.md` §3.*
-- **Counter-metrics:** SLA breach rate (baseline 240 breaches a year) and the share of outputs routed to "Human triage" (31/50 on run v0).
-- **Segments reported, never one global number:** severity (P1–P4, ABSTAIN), language (EN / FR / other), tier (Enterprise / Standard). Fairness metric: equal error rates (P1 recall and false-P1 rate) across language and tier.
+- **Counter-metrics:** SLA breach rate (historical sizing hypothesis of 240 breaches a year) and the share of outputs routed to "Human triage" (31/50 initially, 9/50 on latest run).
+- **Segments reported, never one global number:** severity (P1–P4, ABSTAIN), language (EN / FR / other), tier (Enterprise / Standard). Compare P1 recall and false-P1 counts across language and tier with denominators; small samples do not establish equal error rates or fairness.
 - **Harm threshold that stops the rollout:** any confirmed P1 that the agent proposed below P1, in any segment, or any priority lowered below the declared one without an engineer reason. Consequence: the agent goes back to suggestions-only mode the same day. **Owner: Head of Support**, who holds the ⏻ switch.
 ## Sessions 6 + 7 — experiments, switch and trace
 *23 November 2026 · details in `06_07_experiments_operations.md`.*
 - **Experiments on real users:** any experiment on real support engineers and live tickets is signed by the **Head of Support** and read by the **DPO** before it starts. The decision rule (ship / iterate / kill) and the harm threshold (Session 5) were written on 23 November 2026, before the first unit (06_07 §2). Pre-registered segments: severity, language, tier.
 - **The switch:** the **Head of Support** can move the system to suggestions-only or off by day, the **on-call support engineer (rotation)** by night; either one is enough. Last tested 22 November 2026 by Malek Saoudi on the local prototype (7/7 checks); next test before the pilot starts, then monthly.
-- **The trace:** one trace per ticket (spans: request → redact → account_sla → classify → rules → retrieve → route → policy → human_decision), kept for 12 months *(decision: one contract year, so that any SLA penalty dispute can be answered)* in a self-hosted store inside our tenant. The **Head of Support** answers a customer or a regulator from it, with the **DPO** for personal data. The company answers for what the system proposes (Moffatt v. Air Canada, 2024).
+- **The proposed production trace (not implemented):** one trace per ticket (spans: request → redact → account_sla → classify → rules → retrieve → route → policy → human_decision), kept for 12 months *(decision: one contract year, so that any SLA penalty dispute can be answered)* in a self-hosted store inside our tenant. The **Head of Support** answers a customer or a regulator from it, with the **DPO** for personal data. The company answers for what the system proposes (Moffatt v. Air Canada, 2024).
+
+## Session 8 - final launch decision and limits
+
+**23 November 2026.** [08_launch_memo.md](08_launch_memo.md) records **no live assisted launch**. Latest P1 recall is 9/14, routine acceptance 9/22 and false-P1 rate 3/28 on labelled P2/P3/P4. Both recorded runs respect never-lower, which does not protect an emergency originally declared too low. Current permitted scope is local invented-data demonstration with suggestions-only as default.
+
+- **Human review:** Luna confirmed her actual review of grading sheets bearing her name on 23 November; the dated confirmation and hashes are preserved separately. Main sheets began with LLM prefill, so agreement is not equivalent to independent blind judgement. Other team attestations remain as recorded; no new signature is generated.
+- **Data completeness:** 100 references are recorded as reviewed. E101-E200 are new input candidates, unlabelled and unpredicted; 200 reviewed cases are not yet achieved. Training labels and KB reuse approvals still need real review before live use. The S3 research remains explicitly simulated.
+- **Stop authority:** proposed Head of Support by day and on-call engineer by night; real appointments, production controls, data access and DPO approval are prerequisites, not supplied by this project document.
+- **Release controls:** no live customer contact or remediation; no external model call from the triage engine. Live shadow access and any subsequent experiment require a separate approved protocol, measured baseline and appropriate privacy controls.
+- **Evidence integrity:** original runs and model/data bytes are preserved. Historical LF/CRLF-only conversion is supported by verification; substantive changes fail. The finalisation audit writes new evidence outside frozen run folders.
+- **Future gate:** only reconsider live use after fresh reviewed evaluation meets the safety/usefulness gates, actual user research and time measurement are available, and operational/data approvals are granted. A finite perfect test would still not guarantee safety in production.

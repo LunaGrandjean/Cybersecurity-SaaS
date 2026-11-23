@@ -1,43 +1,23 @@
-# AI-assisted preparation — not human grading
+# Reference preparation and historical diagnostics
 
-Prepared on **15 November 2026**. No evaluation is attributed to Jane, Malek or Luna. No human name, signature, grade or review time has been invented.
+**Current state on 23 November 2026.** The draft references were reviewed and recorded evaluations now exist. This folder contains preparation/history; [the current report](../report_v0.md) and [launch decision](../../08_launch_memo.md) govern the product status.
 
 ## Files
-- `proposed_labels_v0.csv`: 50 proposed corrections for E001–E050, authored by an AI assistant from ticket facts and the written rubric. Includes explicit uncertainty notes. Human fields remain blank and status is `ai_proposed_pending_human_review`.
-- `demo_reference_adapted.json`: proposed structured interpretation of Jane's original 20 exposed demo examples, saved before computing predictions. C19 proposes P2 but its declared P1 must remain effective until a human approves lowering.
-- `demo_diagnostic.json` / `.csv`: actual model outputs and mechanical comparisons on those **20 exposed demo cases only**. They are neither two independent graders nor an official test result.
-- `diagnostic_report.md`: readable exploratory results and component-level misses, generated from the actual diagnostic output.
 
-Neither preparation script passed the evaluation cases to the model.
+- `proposed_labels_v0.csv`: the reviewed working references for the original 50 cases. Actual reviewer fields record the subsequent human decisions; initial preparation is not itself a human validation.
+- `proposed_labels_v1.csv`: reviewed working references for the 50 additional cases. Canonical snapshots and frozen runs are preserved under the main evals directory.
+- `replaced/E050_v0_replaced.csv`: the old E050 retained when its overlap with training was identified. The replacement was made before the first freeze.
+- `demo_reference_adapted.json`, `demo_diagnostic.json`, `demo_diagnostic.csv`, `diagnostic_report.md`: initial 15 November exploratory comparisons on 20 exposed examples only.
+- `post_fix_2026_11_15/`: separate post-fix development run with the same provisional references, [comparison](post_fix_2026_11_15/comparison.md). This is tuning evidence, not the official evaluation.
 
-The baseline above is preserved. A separate post-fix diagnostic is in `post_fix_2026_11_15/`: same provisional references, no official holdout inference. See [before/after comparison](post_fix_2026_11_15/comparison.md).
+The diagnostic scripts did not predict the official cases. The later 22 November runs are recorded elsewhere; do not use historical pending-label descriptions as the current status.
 
-For the actual team review, follow [VALIDATION_EQUIPE.md](../VALIDATION_EQUIPE.md). `prototype.import_review` checks actual decision/name/date fields and writes a new reviewed CSV without creating predictions or overwriting earlier annotations.
+`proposed_labels_v2.csv` contains expected answers for E101-E200, before any model output. Luna approved E151-E200 on 23 November 2026; her first name, actual registration time and decisions are recorded. E101-E150 still await Jane's actual review. Semantic family similarities remain disclosed and require resolution before an independent holdout; no model output has been graded by this reference approval.
 
-## AI re-review of E035–E050 — 18 November 2026
+The [E151-E200 preparatory review](review_E151_E200_2026-11-23.md) explains each of Luna's 50 references and the routing corrections for E162, E170 and E172. Luna subsequently approved them and the proposed E174 replacement: a coordinated-vulnerability-disclosure documentation question replaces the browser-support question that repeated E092. The [confirmation record](luna_confirmation_E151_E200_2026-11-23.json) preserves that explicit agreement and the former E174. The preparatory JSON remains a historical snapshot; other family similarities still need arbitration, and this is not a model evaluation.
 
-The 16 proposed references assigned to Luna were reviewed again against the inputs, rubric and actual KB text, without running the model. See [the case-by-case review](review_E035_E050_2026-11-18.md) and [structured review decisions](review_E035_E050_2026-11-18.json). Only their proposed actions, source references, handover flags and AI notes were updated; other cases and human fields were preserved. The canonical evaluation CSV remains unchanged and human validation is still pending.
+## Human review and next batch
 
-Four unsupported expected source matches were removed (E035, E037, E039, E048); E035/E039 now explicitly require a human because there is no sufficiently relevant source. E050 closely overlaps training family `TRAIN-P4-03`: replacement is recommended before an independent evaluation. No input was silently replaced, and the classifier/training data were not changed in response to these cases.
+Luna confirmed actual review of all existing grading sheets bearing her name on 23 November 2026; [dated confirmation and file hashes](../finalisation_2026_11_23/luna_grading_confirmation.json). This does not authorise signatures for a new scenario or establish an independent blind study. The main recorded sheets used judge-prefilled answers, as disclosed in the report.
 
-## Suggested work distribution, not a record of completed work
-| Proposed task owner | Initial label review |
-|---|---|
-| Jane | E001–E017 |
-| Malek | E018–E034 |
-| Luna | E035–E050 |
-
-Each person reads the original input, considers the AI proposal critically, accepts or corrects it, and records their own real name/date. Cases with `ai_uncertainty` need agreement on the rubric before the first model run. Copy only genuinely reviewed answers into the canonical CSV; set `human_verified` only after that actual review. Optional `human_decision` / `human_comment` columns are working notes, not a signature.
-
-After labels/model are frozen and the 50 cases have run, **two people each grade all 50 outputs independently**. For example Jane could fill grading A and Malek grading B, while Luna coordinates disagreements; these are suggested future roles only. Do not split the two-grader requirement into 25 cases per person. Preserve the original grades.
-
-Mechanical severity/team/source agreement on the demo does not establish the ≥62% two-human acceptance criterion, measured ≥17% time saving, or a calibrated confidence score. The official report must disclose the actual method and any remaining human work.
-
-## Human review status as of 21 November 2026
-
-- E018-E034: Malek Saoudi accepted the proposed labels on 17 November; the review fields are complete.
-- E035-E049: Luna Grandjean approved the labels on 18 November; the review fields are complete.
-- E050: Luna marked the original case for replacement because it overlaps training family `TRAIN-P4-03`. E050 was replaced on 22 November 2026 by a new independent case (R1, incident family `EVAL-ONLY-050-R1`, a French holiday support-coverage question with no overlap with training). Malek Saoudi reviewed and approved its expected reference on behalf of Luna Grandjean. The original row is kept in `evals/ai_review/replaced/E050_v0_replaced.csv`.
-- E001-E017: Jane Galthie reviewed E001-E017 with Malek Saoudi on 17 November 2026 (16:00-17:00, UTC+01:00); her rows are timestamped 2026-11-17T16:42:18+01:00, during that session. 12 accepted, 5 corrected (E003, E004, E007, E009, E015).
-
-The combined proposal CSV preserves each person's recorded work. `evals/eval_set_v0.csv` now holds the 50 human-labelled cases (imported 22 November 2026); the original input-only version is kept as `evals/eval_set_v0_inputs.csv`. The official run is frozen in `evals/runs/v0` and awaits two independent graders.
+E101-E200 in `../eval_set_v2_candidates.csv` remain input-only candidates; approved expected answers are recorded separately in `proposed_labels_v2.csv`. E174's approved replacement is aligned in both files. Predictions have not been exposed and semantic independence still requires review. Follow [VALIDATION_EQUIPE.md](../VALIDATION_EQUIPE.md) before a new freeze/run. Never turn a preparation script or a judge output into a human signature.

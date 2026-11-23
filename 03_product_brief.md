@@ -2,10 +2,10 @@
 
 **Team:** Luna, Malek, Jane · **Starting point:** P7 · Cybersecurity SaaS · **Version:** v2 
 
-> **S4 implementation note - 12 November 2026:** actual code/data are described in `04_architecture.md` and `spec.md` v2. Current training has 300 synthetic rows (P1 70 / P2 75 / P3 90 / P4 65), with AI-proposed labels pending human review; source reuse sign-off is simulated. The new 50 evaluation INPUTS are not yet human-labelled or graded. S3 timings and the 62% acceptance-to-time-saving conversion remain hypotheses. The local default is suggestions-only; assisted raises are opt-in. Earlier planned data/model claims below are not measured results.
+> **Historical S3 design brief. Current implementation and results, updated 23 November 2026:** see [product_brief.md](product_brief.md), [04_architecture.md](04_architecture.md) and [08_launch_memo.md](08_launch_memo.md). The evaluated engine is v0.5; 100 references are reviewed and 100 additional input candidates await review. Latest acceptance is 9/22 and P1 recall 9/14, so no live assisted launch is approved. Timings, financial gains and role-play interview answers below remain hypotheses. The original S3 feature prioritisation is retained as design history.
 
 ## 1. Problem, user, do-nothing  *(from 01)*
-- **Problem in one sentence :** our 25 support engineers spend about 12 of the 33 minutes a ticket takes on triage (reading, severity, searching past incidents, routing), and we breach about 240 SLAs a year at ~€2,000 each, partly because a critical ticket written in a calm tone gets the wrong priority.
+- **Problem in one sentence:** engineers need to connect ticket severity, the account SLA and reusable knowledge reliably. The scenario supplies 25 engineers; the 12/33-minute triage split and 240 annual breaches at about EUR2,000 each are sizing hypotheses, not measured customer facts.
 - **User (persona):** L2 support engineer — goal: put each of ~240 tickets a month in the right queue at the right severity before the SLA clock runs out — pain: has to read raw logs and search old tickets by hand before even knowing how urgent a ticket is.
 - **Do-nothing baseline:** the team keeps triaging by hand and improves by about 5 % a year (≈ €112k, `02_sizing.xlsx`). The competing project is rule-based SLA routing in the ticketing tool (≈ €100k).
 
@@ -50,7 +50,8 @@ Reach = 6,000 tickets a month (`02_sizing.xlsx`, Inputs D6); auto-remediation re
 - **The cut that hurt the most:** the customer update draft. On a P1, the first message to the client is what the client remembers, but it is a higher trust level than this MVP and does not test the flip.
 
 ## 4. Data  *(details in governance.md)*
-No real tickets: the eval-set is AI-generated from public material (public status pages, CVE descriptions, vendor docs) and labelled by hand by the team. ~300 synthetic tickets for the classifier (~5 % P1, a third of them disguised: written calmly), 20 eval cases now, 50 with Assignment 4, 200 by Session 5. Segments: severity, contract tier, language (EN/FR), product module. Legal basis in production: the customer contract (DPA); training on client tickets needs an explicit clause. Leakage: split by incident, not by ticket. Freshness: threat types change monthly — test 7 fails, so the eval-set is refreshed every month.
+No real tickets are used. Current fixtures are internally authored synthetic scenarios, not an imported public dataset. Training contains 300 rows across 40 template families (P1 70 / P2 75 / P3 90 / P4 65), with human review pending. Two 50-case evaluations have recorded reviewed references and grades; a further 100 input candidates are not yet labelled or evaluated. The target of 200 reviewed cases remains pending. Customer isolation and exact-text/family checks are implemented, while semantic independence still needs review. Source reuse approvals are simulated; live data rights and retention require the designated operational reviewers.
+
 
 ## 5. Model — one rung per part
 | Part | Rung | Why the rung below fails |
@@ -62,7 +63,7 @@ No real tickets: the eval-set is AI-generated from public material (public statu
 | The MVP | 4 · hybrid | each part on its own rung; no LLM needed in v0, so no log leaves our perimeter |
 
 ## 6. Where it lives (integration surface)
-A side panel inside the ticketing console the engineers already use — no new tool. Speed: triage shown under 30 s after the ticket arrives (P1 SLA = 1 h). Format: severity badge + confidence + one-line reason + SLA countdown + top-3 similar tickets. **Confidence** = the severity classifier's probability for the proposed priority, an uncalibrated model output, not a measured probability of correctness: High ≥ 80 %, Medium 70–80 %, Low < 70 % (below 70 % the agent does not guess and an engineer triages). In the prototype the value is illustrative. Fallback: if the agent is down, tickets flow as today with the customer-declared priority. Log: every agent decision with its reason, visible to the support lead and auditable in a penalty dispute.
+A side panel inside the ticketing console the engineers already use — no new tool. Speed: triage shown under 30 s after the ticket arrives (P1 SLA = 1 h). Format: severity badge + confidence + one-line reason + SLA countdown + top-3 similar tickets. **Confidence** = the severity classifier's probability for the proposed priority, an uncalibrated model output, not a measured probability of correctness: High ≥ 80 %, Medium 70–80 %, Low < 70 % (below 70% engineer review is required). In the functional prototype the score is calculated, but it remains uncalibrated; a rule override is a separate decision. In v0.5 a low score requires review but can still accompany an assisted-mode raise in a synthetic demonstration. Fallback: if the agent is down, tickets flow as today with the customer-declared priority. Log: every agent decision with its reason, visible to the support lead and auditable in a penalty dispute.
 
 ## 7. Success criterion — one sentence
 > On our eval-set (20 cases now, 200 by then), at least **62 % of P3/P4 tickets** get a triage — severity, team and at least one relevant resolved ticket — that two graders would accept without changing anything, **and no P1 is proposed below P1**.

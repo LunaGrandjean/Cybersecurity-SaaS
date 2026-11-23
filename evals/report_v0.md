@@ -32,13 +32,13 @@ Counts are cases that grader A marked `no`; grader B's counts are the same excep
 Single misses: E029 sends to a person a ticket that needs no handover (`policy`); E030 cites an irrelevant source, KB-DET-01, instead of KB-INT-01 (`retrieval`).
 
 ## 3. Graders
-Grader A was **Malek Saoudi**, grader B **Luna Grandjean**, 22 November 2026 (`grading_a.csv`, `grading_b.csv`), following the guideline in `evals/README.md`, which was committed before grading. They disagree on **1 / 50 cases (98 % agreement)**: on E032, A accepts and B rejects because the effective priority is P1 where P3 was expected. Original grades are preserved and there was no adjudication. Graders A and B reviewed and signed each grade, starting from an LLM-judge pre-fill (`evals/runs/v0/ai_judge/`, prompt `evals/judge_prompt.txt`).
+The sheets record grader A as **Malek Saoudi** and grader B as **Luna Grandjean** for the run dated 22 November 2026 (`grading_a.csv`, `grading_b.csv`). Luna explicitly confirmed her actual review on 23 November. The recorded method follows the guideline in `evals/README.md`, which was committed before grading. They disagree on **1 / 50 cases (98 % agreement)**: on E032, A accepts and B rejects because the effective priority is P1 where P3 was expected. Original grades are preserved and there was no adjudication. Graders A and B reviewed and signed each grade, starting from an LLM-judge pre-fill (`evals/runs/v0/ai_judge/`, prompt `evals/judge_prompt.txt`).
 
 ## 4. Demo versus evaluation
 Jane's original 20 examples, the six interactive demo tickets and all engineering regression cases were exposed during development, so they are excluded from this holdout (`demo_reference_v0.csv`, unchanged). E050 was replaced before freezing because it overlapped TRAIN-P4-03 (`evals/ai_review/replaced/`). **All 50 E-cases are now exposed:** their outputs were read for grading. Any change to the model made after reading them must be evaluated on fresh cases (`eval_set_v1.csv`), not on these 50.
 
-## 5. Next step
-Implement EVAL-01 to EVAL-05 without looking at these 50 outputs again, then evaluate on a fresh, labelled set before any integration budget. The priority order is P1 recall (a catastrophic miss), then the raise rule (16 cases, a mostly mechanical fix), then routing.
+## 5. Next step at the end of the initial run
+The steps in this paragraph were subsequently implemented for v0.5 (section 8). Implement EVAL-01 to EVAL-05 without looking at these 50 outputs again, then evaluate on a fresh, labelled set before any integration budget. The priority order is P1 recall (a catastrophic miss), then the raise rule (16 cases, a mostly mechanical fix), then routing.
 
 ## 6. Preserved initial exploratory diagnostic — 15 November 2026
 An automatic diagnostic was executed on the **20 exposed demo references only**, not on E001–E050. No human grades were created or attributed. Reference interpretations were prepared before predictions but are not independently certified.
@@ -59,7 +59,7 @@ Critical examples in this initial run: C03 suggested P4 for a possible exfiltrat
 
 Full initial evidence: [diagnostic report](ai_review/diagnostic_report.md), [raw outputs](ai_review/demo_diagnostic.json). Baseline model fingerprint: `41acde6fcf51b4c1`. The code was subsequently corrected using these exposed development cases; see section 7. These cases are excluded from the independent holdout.
 
-The [50 proposed corrections](ai_review/proposed_labels_v0.csv) are explicitly AI-authored drafts, with human names/dates left blank. Canonical E001–E050 labels remain pending and their predictions have not been exposed by either diagnostic. **Official verdict stays pending human evaluation.** The initial demo P1 recall failed its target; subsequent development correction is recorded separately below.
+At the time of the 15 November diagnostic, the proposed references were drafts and the official run had not occurred. Those 50 references were subsequently reviewed, E050 was replaced and the run was executed on 22 November (sections 1-5). This historical diagnostic is not the current product verdict.
 
 ## 7. Post-fix development diagnostic — 15 November 2026
 
@@ -76,9 +76,9 @@ Actual new run: model `e472b6a6d01222de`, same 20 exposed demo cases and **byte-
 
 C03 now surfaces a possible incident and raises P4 to P1 in assisted mode. C18 proposes P1 while preserving human-only legal handling. Contextual service-impact rules and bilingual search aliases address the other exposed severity/source misses. Three route disagreements remain: C09 (reports-page outage), C15 (mixed administrator/dashboard help), C17 (cosmetic report-logo request). Team ownership needs agreement; these are not three independently established model failures. Each development miss led to a marked requirement in `spec.md` DEV-01–06.
 
-[Raw post-fix outputs and comparison](ai_review/post_fix_2026_11_15/comparison.md). Perfect source-id overlap is not proof of relevant troubleshooting. No human acceptance result or measured time saving is claimed. The official top-three-misses section remains pending the real independent run.
+[Raw post-fix outputs and comparison](ai_review/post_fix_2026_11_15/comparison.md). Perfect source-id overlap is not proof of relevant troubleshooting. No human acceptance result or measured time saving is claimed. At the time of that development diagnostic the official run was pending; its later misses are now reported in sections 2 and 8.
 
-Next: [team validation instructions](VALIDATION_EQUIPE.md), then freeze/run, two independent grades and exact reporting. The import helper refuses incomplete review, never generates grades and never invokes inference.
+For a future genuinely unseen batch, follow [team validation instructions](VALIDATION_EQUIPE.md). Existing runs and grades must remain preserved. The import helper does not create human review or invoke inference.
 
 ## 8. v0.5 on fresh cases: after fixing EVAL-01 to EVAL-05 (22 November 2026)
 **Engine v0.5** (`e4ef11ac89758672`) implements spec EVAL-01 to EVAL-05: account-takeover, retained-access and cross-tenant P1 rules; explicit "no incident" wording caps a classifier P1; abstention on attachment-only, legal, other-customer-data, prompt-injection, unverified privileged-change and vague tickets; raising the effective priority whenever the proposal is higher (assisted mode, never lowering); a wider routing vocabulary. The rules were developed on the exposed v0 cases only (development check: P1 recall 14/14, false P1 3/28). The engine was frozen, then run **once** on the 50 **fresh** cases E051–E100 of `eval_set_v1.csv`, which were labelled by the team before the run (`evals/eval_set_v1_fresh.csv`; run `evals/runs/v1_fresh`; cases SHA-256 `66303cc4…`; predictions SHA-256 `46a2b526…`). Caveat: the person writing the fixes had seen the v1 inputs; the fixes follow the spec patterns, not individual v1 tickets.
@@ -93,7 +93,7 @@ Next: [team validation instructions](VALIDATION_EQUIPE.md), then freeze/run, two
 | Team accuracy | 34 % | **68 %** | — |
 | Handover agreement | 92 % | **94 %** | — |
 | Expected source in top 3 | 41 % | **59 %** (22/37) | — |
-| ABSTAIN cases that abstain | 0/8 | **7/8** | — |
+| ABSTAIN cases that abstain | 2/8 | **7/8** | — |
 | Outputs sent to Human triage | 31/50 | **9/50** | — |
 | Priority lowered below declared | 0 | **0** | 0 → met |
 
@@ -109,4 +109,16 @@ Both graders accept, by segment: P1 2/14, P2 4/6, P3 4/15, P4 5/7, ABSTAIN 7/8; 
 | 8/50 | **P1 routed to the component team instead of Incident Response** (e.g. E051, E053, E057, E060, E063) | `routing` | EVAL-08 |
 | 5/50 | **Correct triage, but the cited sources do not address the component** (E059, E068, E070, E077, E088) | `retrieval` | EVAL-09 |
 
-**Reading.** The fixes generalised well where they encode a *policy* (raising, abstaining, avoiding false P1s, routing): those metrics improved on cases the rules had never seen. They did **not** generalise where they encode *known attack patterns*: P1 recall fell on attack types absent from training and rules. This is the concept drift expected in `06_07_experiments_operations.md` §3, now measured. **Consequence for launch:** no automatic raising in production. Only suggestions-only or shadow mode, until P1 recall is 100 % on a fresh labelled set.
+**Interpretation.** Routine acceptance, routing and false-P1 rate are better in the second recorded batch, while P1 recall is lower. Different batches and model versions prevent a controlled causal comparison. The second batch's inputs had also been visible to the developer, so these results do not demonstrate fully blind generalisation. They reveal continuing coverage gaps; they do not by themselves measure temporal concept drift. **Launch decision:** no live assisted mode; the current release remains a local synthetic-data demonstration. [Final launch memo](../08_launch_memo.md).
+
+## 9. Finalisation audit and review confirmation - 23 November 2026
+
+Luna explicitly confirmed actual review and approval of all grading sheets bearing her name, including both grading_b files and the golden30 blind_b sheet. [Confirmation and file hashes](finalisation_2026_11_23/luna_grading_confirmation.json). This does not validate future cases, training labels or operational approval. The original main sheets used judge-prefilled answers, so agreement rates remain subject to anchoring; no additional blind review is invented.
+
+Both recorded metrics files are recomputed with the check-only summary during finalisation. The initial prediction hash matches only after reconstructing its original Windows CRLF line endings; Git had converted the file to LF. Only that newline equivalence is accepted; other content changes still fail. No original run, grade, case reference, model source or training fixture is rewritten.
+
+The initial ABSTAIN comparison in section 8 is corrected from 0/8 to **2/8**, based on the actual preserved outputs. Latest actual abstention is 7/8 and assisted raises are 21/50 (initially 0/50). These are descriptive counts, not a new evaluation.
+
+There are 100 recorded reviewed cases and 100 new input candidates E101-E200. The target of 200 reviewed cases remains pending semantic overlap review and actual human labels for the candidates. The candidates have not been run through the model and carry no generated human signatures. Real user interviews, measured time saving and training/source review are also not completed by this finalisation.
+
+[Current metrics](../05_metrics.md) | [Final product brief](../product_brief.md) | [Finalisation status](../FINALISATION.md).

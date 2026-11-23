@@ -5,3 +5,7 @@ prototype/runtime/
 .pytest_cache/
 
 Data & AI Product_ From Diagnosis to Delivery/
+
+# Local verification artifacts and presentation files
+/evals/finalisation_2026_11_23/
+/presentation/
