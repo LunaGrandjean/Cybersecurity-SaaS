@@ -1,68 +1,71 @@
-# Team 8 — SLA-aware prioritisation for cybersecurity SaaS
+# Team 8 SLA triage copilot
 
-**Course:** Data & AI Product: From Diagnosis to Delivery (MSA-DAT07-04) · Albert School · shared project with Agentic Workflows
-**Cohort:** M2-INTER-1 / M2-INTER-2 (keep one)
-**Project:** P7 — SLA-aware prioritisation
-**Repository:** [Cybersecurity-SaaS](https://github.com/LunaGrandjean/Cybersecurity-SaaS)
+**P7 Cybersecurity SaaS | Finalisation 23 November 2026 | Evaluated engine v0.5**
+
+The prototype helps an internal support engineer propose severity, preserve the original SLA clock, retrieve customer-scoped knowledge and record a human decision. It never lowers a priority automatically, contacts a customer or executes remediation.
+
+**Decision: no live assisted launch.** Keep the current release as a local synthetic-data demonstration in suggestions-only mode. The latest recorded run misses 5 of 14 expected P1 incidents. The [launch memo](08_launch_memo.md) states the evidence, risks and conditions for reconsideration.
 
 ## Team
-| Name | Git handle | Also in the Agentic Workflows team? |
-|---|---|---|
-| Jane Galthié | jgalthie-sketch | |
-| Malek Saoudi | Msaoudi115 | |
-| Luna Grandjean | LunaGrandjean | |
 
-## Our agent
-- **Starting point:** P7 — SLA-aware prioritisation
-- **The company:** Cybersecurity SaaS — 400 enterprise accounts, 6,000 tickets a month, 25 support engineers, SLA P1 = 1 h, P2 = 4 h
-- **The job, in one sentence:** When a new support ticket arrives, the agent looks up the client's SLA, proposes a severity with its reason and the closest resolved tickets, producing a triage that an engineer accepts or corrects before the SLA clock runs out.
-- **Trust level per step:** L4 to raise a severity · person only to lower one · L1 for similar-ticket suggestions · L3 for routing P3/P4 tickets (lead samples 5 %) · person only for diagnosis and any customer message
-- **One thing it must never do:** lower a ticket's priority on its own — and never contact a customer.
+Jane Galthie, Malek Saoudi and Luna Grandjean. Each person uses their own Git account for genuine contributions. Operational owners in the documents are proposed roles, not real production appointments.
 
-## Repository structure
-One numbered file per session. Every member authors commits in at least four of the numbered files.
+## Run and verify
 
-| File | Session | Status |
-|---|---|---|
-| `00_pitch.md` | before S3, only if you bring your own idea | not applicable (official proposal P7) |
-| `01_problem_statement.md` | S1–S2, Assignment 1 | done |
-| `governance.md` | created for Assignment 1, one section added every session | Sessions 1 to 7 done; Session 8 at launch |
-| `02_sizing_CyberSaas.xlsx` | S2, Assignment 2 | done: conditional go |
-| `02_investment_memo.md` | S2, Assignment 2 | done |
-| `03_product_brief.md` | S3 | done, v2, with `03_ai_lean_canvas.md`, `03_user_research.md`, `03_prototype_link.md`; final version at S8 |
-| `04_architecture.md` | S4 | done: prototype v0.4 → v0.5, switch tested 22 Nov 2026 |
-| `05_metrics.md` | S5 | done: metric stack, stop criterion, hierarchy by segment, three business metrics |
-| `06_07_experiments_operations.md` | S6 + S7 (the course merges `06_ab_protocol.md` and `07_operations.md` into one file) | done: A/B protocol, monitoring, incidents, rollback, owners |
-| `08_launch_memo.md` | S8 | to do (due 26 Nov) |
-| `spec.md` | S4 → final | v2 with post-evaluation requirements EVAL-01 to EVAL-09; final version at S8 |
-| `/prototype` | from S4 | local console and engine v0.5, switch test script, 35 regression tests |
-| `/evals` | from S4 | `eval_set_v0.csv` (50) and `eval_set_v1.csv` (100) labelled by the team; frozen runs `runs/v0` and `runs/v1_fresh`; grading guideline and agreement rates in `evals/README.md`; results in `evals/report_v0.md` |
+Run these commands from this repository root:
 
-## Rules
-- Commit with your own Git account: the individual question at the oral is about a commit you signed.
-- Tag the final version `v1.0` before the first oral of your cohort. No commits after the first oral starts.
-
-## Run the prototype
-From this repository root:
 ```powershell
-uv run --python 3.12 python -m prototype.server
-```
-Open http://127.0.0.1:8765. Default: suggestions-only, synthetic data, no external inference, no customer action. More in [run and evaluation instructions](prototype/README.md) and [architecture](04_architecture.md).
-
-Tests and the stop-switch drill:
-```powershell
-uv run --python 3.12 python -m unittest prototype.test_review prototype.test_evaluation prototype.test_workflow
-uv run --python 3.12 python -m prototype.switch_drill --operator "Your Name"
+uv run --frozen --python 3.12 python -m prototype.server
 ```
 
-## Results so far
-Full detail in [`evals/report_v0.md`](evals/report_v0.md). Every case was labelled by the team before the run, and every run was graded by two people.
+Open http://127.0.0.1:8765 and use invented data only. Dependencies are locked; the first installation needs network access, inference does not. The default is suggestions-only. Assisted mode is available for synthetic workflow demonstrations, not approved for live tickets.
 
-| | v0 (E001–E050) | v0.5 (E051–E100, fresh cases) | Criterion |
+```powershell
+uv run --frozen --python 3.12 python -m unittest prototype.test_review prototype.test_evaluation prototype.test_workflow -v
+uv run --frozen --python 3.12 python -m prototype.evaluate summarise --run-dir evals/runs/v0 --cases evals/eval_set_v0.csv --check-only
+uv run --frozen --python 3.12 python -m prototype.evaluate summarise --run-dir evals/runs/v1_fresh --cases evals/eval_set_v1_fresh.csv --check-only
+uv run --frozen --python 3.12 python -m prototype.audit_submission
+```
+
+The summary commands recompute results without changing recorded metrics. Legacy Windows/Git LF/CRLF conversion is accepted; other changes to frozen cases or predictions still fail validation. The submission audit distinguishes integrity checks, failed product gates and remaining human work.
+
+## Recorded results
+
+| Measure | Initial run, E001-E050 | Latest run, E051-E100 | Gate |
 |---|---|---|---|
-| P3/P4 triages both graders accept unchanged | 11.8 % | 40.9 % | ≥ 62 % |
-| P1 recall | 78.6 % | 64.3 % | 100 % |
-| False-P1 rate | 25 % | 10.7 % | ≤ 15 % |
-| Priority lowered below declared | 0 | 0 | 0 |
+| P3/P4 accepted by both recorded graders | 2/17 = 11.8% | 9/22 = 40.9% | At least 62%: not met |
+| P1 detected | 11/14 = 78.6% | 9/14 = 64.3% | 100%: not met |
+| False P1 on labelled P2/P3/P4 | 7/28 = 25.0% | 3/28 = 10.7% | At most 15%: met on latest run |
+| Automatic lowering | 0/50 | 0/50 | Zero: met |
 
-The criterion is not met yet. The agent never lowered a priority, but it still misses P1s of attack types it has never seen. Next requirements: `spec.md` EVAL-06 to EVAL-09. The training labels are synthetic and not yet reviewed by the team, and no handling-time saving has been measured.
+See [report_v0.md](evals/report_v0.md) for methods, original evidence and limitations. The batches differ, the second batch's inputs had been visible to the developer, and main human grading used LLM-prefilled sheets. Luna confirmed actual review of sheets bearing her name on 23 November. No actual handling-time saving or annual financial benefit has been measured.
+
+## Deliverables
+
+| File | Purpose and current state |
+|---|---|
+| `01_problem_statement.md` | Scenario facts, unknown baseline and problem hypotheses |
+| `02_sizing_CyberSaas.xlsx`, `02_investment_memo.md` | Historical conditional investment hypotheses; final decision is in S8 |
+| `03_product_brief.md`, `03_ai_lean_canvas.md`, `03_user_research.md` | S3 design history; interviews remain explicitly simulated |
+| `03_prototype_link.md` | Original Jane prototype and functional local console |
+| `04_architecture.md` | Actual v0.5 workflow, checkpoints, switch, data and limits |
+| `05_metrics.md` | Current metrics, segment counts, business hypotheses and evaluation limits |
+| `06_07_experiments_operations.md` | Proposed experiment and operations plan; not a deployed pilot |
+| `08_launch_memo.md` | No live assisted launch; conditions for reconsideration |
+| `product_brief.md` | Final consolidated product scope and evidence |
+| `spec.md` | Implemented behaviour and remaining EVAL-06 to EVAL-09 requirements |
+| `governance.md` | Sessions 1-8, checkpoints, owners and final scope |
+| `evals/report_v0.md`, `evals/runs/` | Two preserved evaluations and original grades |
+| `evals/finalisation_2026_11_23/` | Separate finalisation evidence, grading confirmation and browser checks |
+
+## Evaluation coverage and remaining human work
+
+There are **100 recorded human-reviewed cases** and **100 additional input candidates** in `evals/eval_set_v2_candidates.csv`. The latter have no expected answers or grades and have not been passed to the model. The target of 200 human-reviewed cases is **not yet met**. Exact text and unique ids cannot establish semantic independence.
+
+Draft expected answers are available in `evals/ai_review/proposed_labels_v2.csv`; all human decisions/names/dates remain blank. They are review aids, not model outputs or ground truth.
+
+Follow [VALIDATION_EQUIPE.md](evals/VALIDATION_EQUIPE.md) to review those candidates before any new inference. Production also requires training-label/source review, real user observations, approved data access/retention and operational sign-off. None is substituted with fabricated evidence.
+
+The lecturer's requirements concerning four commit authors for a three-person team and any missing classroom starter remain to be reconciled. Team members must review and commit their changes, then create the final `v1.0` tag before the oral deadline specified by the course. No final tag, push, deployment or real operational approval is claimed by these files.
+
+[Current handoff](S4_CHECKLIST.md) | [Prototype instructions](prototype/README.md) | [Finalisation checklist](FINALISATION.md)

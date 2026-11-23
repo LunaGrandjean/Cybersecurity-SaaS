@@ -6,7 +6,7 @@ import unittest
 import uuid
 from pathlib import Path
 
-from .evaluate import freeze, run, summarise
+from .evaluate import digest, digest_match, freeze, run, summarise
 
 
 class EvaluationProtocolTests(unittest.TestCase):
@@ -53,6 +53,19 @@ class EvaluationProtocolTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             run(self.cases, self.output)
 
+    def test_newline_conversion_is_portable_but_content_edits_are_rejected(self):
+        manifest = freeze(self.cases, self.output)
+        self.assertIn("python", manifest["runtime_provenance"]["versions"])
+        self.assertEqual(manifest["model_version"], manifest["runtime_provenance"]["model_version"])
+        expected = digest(self.cases)
+        raw = self.cases.read_bytes()
+        self.cases.write_bytes(raw.replace(b"\r\n", b"\n"))
+        self.assertIn(digest_match(self.cases, expected), ("exact", "line_endings_only"))
+        self.cases.write_bytes(self.cases.read_bytes().replace(b"UNIT-ONLY-0", b"CHANGED-0", 1))
+        self.assertIsNone(digest_match(self.cases, expected))
+        self.cases.write_bytes(raw + b" ")
+        self.assertIsNone(digest_match(self.cases, expected))
+
     def test_independent_grading_and_tamper_guards(self):
         freeze(self.cases, self.output)
         run(self.cases, self.output)
@@ -70,7 +83,15 @@ class EvaluationProtocolTests(unittest.TestCase):
         self.assertEqual(result["routine_total"], 49)
         self.assertEqual(result["routine_accepted"], 49)
         self.assertEqual(result["disagreements"], 0)
+        metrics_path = self.output / "metrics.json"
+        previous_metrics = metrics_path.read_bytes()
+        # Rechecking an existing run must not overwrite its historical evidence.
+        self.assertEqual(summarise(self.cases, self.output, write=False), result)
+        self.assertEqual(metrics_path.read_bytes(), previous_metrics)
         predictions = self.output / "predictions.json"
+        predictions.write_bytes(predictions.read_bytes().replace(b"\r\n", b"\n"))
+        self.cases.write_bytes(self.cases.read_bytes().replace(b"\r\n", b"\n"))
+        self.assertEqual(summarise(self.cases, self.output, write=False), result)
         predictions.write_text(predictions.read_text(encoding="utf-8") + " ", encoding="utf-8")
         with self.assertRaises(ValueError):
             summarise(self.cases, self.output)

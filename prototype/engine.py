@@ -76,7 +76,25 @@ CRITICAL_RULES = [
     ("SEC-05", r"active (?:data )?exfiltration|exfiltration (?:detected|en cours)|(?:we (?:think|suspect|believe).{0,25}(?:data breach|compromise)|(?:suspected|confirmed|detected) (?:data breach|compromise)|(?:suspicion|soupcon|confirmation).{0,25}(?:fuite de donnees|compromission))", "Incident Response"),
     ("SEC-06", r"(?:detection|detectoin|security|securite).{0,20}alerts?.{0,25}(?:not arriving|stopped|no longer|plus recues)|(?:monitoring|supervision).{0,25}(?:completely down|totalement interrompue)", "Platform"),
     ("SEC-07", r"(?:quarantin|faux positif|false positive).{0,180}(?:(?:production|factory|usine).{0,30}(?:stopped|blocked|arret)|(?:all|toutes).{0,25}(?:operations|lignes).{0,20}(?:stopped|arret))", "Detection Engineering"),
+    # EVAL-01 (spec v2, run v0): account takeover, access retained after offboarding, cross-tenant exposure.
+    ("SEC-09", r"(?:recovery (?:address|e-?mail|phone)|adresse (?:e-mail )?de (?:recuperation|secours)).{0,40}(?:replaced|changed|modified|remplace|modifi)|(?:no longer|lost|ne .{0,12}plus).{0,15}(?:control|controle).{0,40}(?:tenant|account|compte|admin)|(?:mfa|push|prompts?|notifications?).{0,50}(?:did not request|didn.t request|not requested|unrequested|non sollicit|pas demande)", "Identity"),
+    ("SEC-10", r"(?:contractor|former (?:employee|admin)|ex-employee|prestataire|ancien (?:salarie|employe|admin)).{0,70}(?:still|toujours|kept|retained|conserve).{0,30}(?:admin|access|acces|privileg)", "Incident Response"),
+    ("SEC-11", r"(?:another|other|autre) (?:company|customer|client|tenant|entreprise|societe)(?:'s|s)?.{0,25}(?:data|name|device|records|donnees|nom|appareils)|(?:see|sees|shows|opens on|displays|voit|voient|affiche).{0,40}(?:another|other|autre).{0,12}(?:company|customer|client|tenant|entreprise|societe)", "Incident Response"),
 ]
+
+# EVAL-03: tickets the agent must not triage itself. Order matters: the first match wins.
+ABSTAIN_RULES = [
+    ("ABS-01", r"^\W*(?:see|voir|cf)\W+(?:the\s+)?(?:attached|attachment|piece jointe|pj|capture)|(?:attachment|screenshot|capture|piece jointe).{0,30}(?:without|sans) (?:any )?(?:other |autre )?(?:explanation|detail|explication)", "Attachment-only ticket: no readable content to triage.", "Human triage"),
+    ("ABS-02", r"legal (?:advice|answer|opinion)|legally (?:required|obliged)|avis juridique|reponse juridique|obligation legale|(?:devons|doit|must|need to).{0,25}(?:declarer|notify|declare|report).{0,40}(?:autorite|authority|regulator|cnil)", "Legal question: human-only, no legal answer.", "Human triage"),
+    ("ABS-03", r"(?:send|give|provide|share|list|envoy|transmet|communiq).{0,60}(?:other|another|autres?) (?:customers?|clients?|tenants?)|belongs to (?:another|an other|other) customer|appartient a un autre client", "Request involving another customer's data: refuse and hand over.", "Human triage"),
+    ("ABS-04", r"ignore (?:your|all|previous|the) (?:triage )?(?:rules|instructions)|ignore[rz]? (?:tes|vos|les) (?:regles|instructions)|classify this ticket as|set (?:this ticket |it )?(?:to )?p[1-4]\b|system note|note systeme|classe[rz]? ce ticket", "Embedded instruction to the triage system (prompt injection): ignored, human triage.", "Human triage"),
+    ("ABS-05", r"\b(?:disable|turn off|switch off|desactivez|desactiver|remove|supprimez)\b.{0,50}(?:mfa|2fa|two.factor|deux facteurs|login challenges?|authentification|protection)", "Unverified request for a privileged security change: refuse, identity verification by an engineer.", "Identity"),
+]
+
+# EVAL-02: explicit wording that no incident is happening. Blocks a classifier P1 unless a safety rule fires.
+CALM_PATTERN = (r"no (?:incident|intrusion|compromise|outage|impact|suspicious)|aucun (?:incident|probleme)|nothing (?:is |else )?(?:wrong|broken|affected)|nothing else"
+                r"|everything (?:works|is fine|else works)|tout (?:fonctionne|marche)|rien n.est (?:en panne|casse)|planned (?:an? )?(?:incident )?(?:exercise|drill)"
+                r"|exercice (?:planifie|prevu)|(?:test|lab) (?:endpoint|device|machine|mailbox|tenant|file)|fichier de test|questionnaire")
 
 # Development policy, not model probabilities. Rules require an operational
 # failure, not a request containing a product keyword.
@@ -124,7 +142,7 @@ def operational_sentences(text: str):
     for sentence in re.split(r"[\n!?;]+|(?<!\d)\.(?!\d)|\bbut\b|\bmais\b", text):
         if re.search(r"\b(?:how (?:do|to)|what if|comment |procedure|hypothetical|hypothetique|training exercise|exercice)\b", sentence):
             continue
-        if re.search(r"simulation|drill", sentence) and re.search(r"ransom|encrypted|exfiltrat|data breach", sentence):
+        if re.search(r"simulation|drill|fake|faux|factice|planned exercise|exercice", sentence) and re.search(r"ransom|rancon|encrypted|chiffre|exfiltrat|data breach", sentence):
             continue
         if re.search(r"\b(?:no |not |without |aucun|pas de |sans ).{0,35}(?:ransom|encrypted|exfiltrat|compromise|chiffre|data breach|fuite)", sentence):
             continue
@@ -132,17 +150,19 @@ def operational_sentences(text: str):
             continue
         yield sentence
 
+# EVAL-05: wider bilingual vocabulary so that a clear owner is not left to "Human triage".
 ROUTING = [
-    (r"ransom|compromise|compromission|privileged|exfiltrat|rancon", "Incident Response"),
-    (r"sso|\bmfa\b|active directory|identity|identite|authent|connexion|sign.?in", "Identity"),
-    (r"false positive|faux positif|detection rule|regle de detection|quarantin", "Detection Engineering"),
-    (r"phishing.simulation|campaign|campagne|awareness", "Awareness module"),
-    (r"webhook|siem|integration|connecteur", "Integrations"),
-    (r"pdf|report|rapport|export", "Reporting"),
-    (r"certificate|certificat|invoice|facture|compliance", "Account Management"),
-    (r"vpn|proxy|dns|network|reseau", "Network"),
-    (r"endpoint|laptop|agent outdated|poste|ordinateur", "Endpoint"),
-    (r"dashboard|console|tableau de bord|latency|latence", "Platform"),
+    (r"ransom|compromise|compromission|privileged|exfiltrat|rancon|intrusion|attacker|attaquant|malicious|malveillant|stolen|vole|commands? (?:launched |run |executed )?remotely|remote (?:command|shell|execution)", "Incident Response"),
+    (r"\bsso\b|\bmfa\b|\b2fa\b|active directory|identity|identite|authent|connexion|sign.?in|log.?in|password|mot de passe", "Identity"),
+    (r"false positive|faux positif|detection rule|regle de detection|\brules?\b|\bregles?\b|allow.?list|signature|quarantin|detections?\b", "Detection Engineering"),
+    (r"phishing.simulation|campaign|campagne|awareness|sensibilisation", "Awareness module"),
+    (r"webhook|siem|integration|connecteur|connector|log.forwarding", "Integrations"),
+    (r"documentation|documented|public guide|roadmap|feuille de route|training session|formation|onboarding|difference between|support hours|astreinte|browser versions?|navigateur|status page|heberge|hosted", "Customer Success"),
+    (r"pdf|report|rapport|export|chart|graphique|\bcsv\b", "Reporting"),
+    (r"certificate|certificat|invoice|facture|compliance|billing|facturation|licen[cs]e|contract|contrat|(?:add|remove) (?:or remove )?users|utilisateurs|rename|renommer", "Account Management"),
+    (r"vpn|proxy|dns|network|reseau|wi-?fi|firewall|pare-feu", "Network"),
+    (r"endpoint|laptop|agent|poste|ordinateur|sensor|capteur|devices?\b|appareils?|scan|tamper", "Endpoint"),
+    (r"dashboard|console|tableau de bord|latency|latence|\bpage\b|search|recherche|attachment|piece jointe|timeline|notification|digest|crash|slow|lent", "Platform"),
 ]
 
 
@@ -211,6 +231,23 @@ class TriageEngine:
             reasons.append("Language outside EN/FR: human triage required.")
         if len(re.findall(r"\w+", cleaned)) < 6:
             reasons.append("Insufficient detail to classify safely.")
+        abstained = None
+        if language in ("en", "fr"):
+            critical_hit = any(re.search(p, s) for s in operational_sentences(normalized) for _, p, _ in CRITICAL_RULES)
+            for rule_id, pattern, why, route in ABSTAIN_RULES:
+                if rule_id == "ABS-03" and critical_hit:
+                    continue  # an observed cross-tenant exposure is a P1, not a data request
+                match = re.search(pattern, normalized)
+                if match:
+                    abstained = (rule_id, why, route)
+                    evidence.append({"source": "ticket.text (normalised excerpt)", "rule": rule_id, "quote": match.group(0)})
+                    break
+            if not abstained and not critical_hit and len(re.findall(r"\w+", cleaned)) < 15 \
+                    and not any(re.search(p, normalized) for p, _ in ROUTING):
+                abstained = ("ABS-06", "Too vague: no product, symptom or impact to triage.", "Human triage")
+            if abstained:
+                reasons.append(abstained[1])
+                team = abstained[2]
         if account and language in ("en", "fr") and not reasons:
             probabilities = self.classifier.predict_proba(self.vectorizer.transform([cleaned]))[0]
             best = int(probabilities.argmax())
@@ -242,11 +279,18 @@ class TriageEngine:
                             break
                     if method == "scope_rule":
                         break
+            if proposed == "P1" and method == "tfidf_logistic_regression" and re.search(CALM_PATTERN, normalized):
+                # EVAL-02: explicit "no incident / test / planned exercise" wording caps a classifier P1.
+                ranked = sorted(zip(self.classifier.classes_, probabilities), key=lambda pair: -pair[1])
+                proposed = next(str(label) for label, _ in ranked if label != "P1")
+                score = round(float(dict(ranked)[proposed]), 4)
+                evidence.append({"source": "ticket.text (normalised excerpt)", "rule": "CALM-01",
+                                 "quote": re.search(CALM_PATTERN, normalized).group(0)})
             if score < 0.70 and method == "tfidf_logistic_regression":
                 reasons.append("Classifier score below 0.70; an engineer must triage.")
             if team == "Human triage":
                 reasons.append("No supported routing category found.")
-        privileged = bool(re.search(r"(?:disable|desactiv|turn off).{0,35}(?:mfa|protection)", normalized))
+        privileged = bool(re.search(r"\b(?:disable|desactivez|desactiver|turn off)\b.{0,35}(?:mfa|protection)", normalized))
         sensitive = privileged or bool(re.search(r"legal advice|cnil|notify.{0,20}72|notification.{0,20}72", normalized))
         if sensitive:
             reasons.append("Privileged change or legal question: human-only handling; no action or legal answer.")
@@ -257,9 +301,10 @@ class TriageEngine:
             reasons.append("Global suggestions-only switch: no automatic priority or routing change.")
         effective = declared
         # Protect the more urgent value; a human is required to LOWER, always.
-        can_raise = account and language in ("en", "fr") and not privileged and (
-            method == "safety_rule" or (not sensitive and (
-                method == "scope_rule" or (score is not None and score >= 0.70))))
+        # EVAL-04: in assisted mode a higher proposal raises the effective priority (the safe
+        # direction); P1/P2 still require engineer review below. No raise on legal/privileged.
+        can_raise = account and language in ("en", "fr") and not privileged and not abstained and (
+            method == "safety_rule" or not sensitive)
         if mode == "assisted" and can_raise and proposed:
             effective = min((declared, proposed), key=PRIORITIES.index)
         lowering = proposed is not None and PRIORITIES.index(proposed) > PRIORITIES.index(effective)

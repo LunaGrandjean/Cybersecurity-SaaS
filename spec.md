@@ -1,7 +1,6 @@
 # spec.md - executable spec - SLA-aware triage copilot - v2
 
-**S4 implementation: 12 November; corrected 15 November 2026.** This describes the code in `/prototype`.
-The independent product evaluation and two-person grading have not yet taken place.
+**Updated 23 November 2026.** This describes evaluated engine v0.5 and the final console. Two recorded evaluations exist; both fail the launch criterion. [Final decision](08_launch_memo.md): no live assisted launch. EVAL-01 to EVAL-05 are implemented; EVAL-06 to EVAL-09 remain future requirements, not evaluated fixes.
 
 ## problem
 Support engineers need severity, contractual response deadlines and reusable diagnostic sources in one console. P7 supplies 400 accounts, 6,000 tickets/month and 25 engineers. The 240 annual breaches, 33-minute handling time, 12-minute triage split and financial gains are assumptions/estimates, not measured prototype results. The >=62% routine-acceptance proxy depends on those timing assumptions; the >=17% real handling-time saving still needs a timed comparison.
@@ -12,7 +11,7 @@ Support engineers need severity, contractual response deadlines and reusable dia
 3. Look up the synthetic account SLA. Unknown account: abstain, flag unverified contract, use a clearly provisional clock.
 4. TF-IDF + class-weighted logistic regression proposes a severity; contextual safety rules may override to P1 and bounded service-impact rules to P2/P3, using an exact normalised ticket excerpt.
 5. Retrieve up to 3 reusable sources, minimum cosine similarity 0.08, scoped to the same customer or generic KB; bilingual topic aliases enrich the search index only.
-6. Apply human-review gates and the global mode. Default `suggestions`: never change priority. In `assisted`, an eligible model score >=0.70 or separately matched contextual rule may raise but never lower.
+6. Apply human-review gates and the global mode. Default `suggestions`: never change priority. In the v0.5 synthetic `assisted` demonstration, an eligible higher proposal raises even below score 0.70; review is still required. Never lower. Live assisted use is not approved.
 7. Engineer can take over, change priority/team with a reason, record verification and accept. P1/P2, lowering, weak confidence, unsupported input and missing sources require review. Taking over never removes manual controls.
 8. Persist only the redacted ticket, analysis, engineer actions and global setting in local SQLite. No customer-send or remediation endpoint exists.
 
@@ -41,11 +40,11 @@ Text length 1-20,000; request body <=65,536 bytes. Unsupported priorities, malfo
 ## model_and_score
 TF-IDF unigrams/bigrams, accent stripping, sublinear term frequency; logistic regression with balanced class weights, C=4, seed 17. Fit only on `prototype/data/training_tickets.csv`. Retrieval has a separate TF-IDF index over 15 synthetic approved-status fixtures plus versioned bilingual search aliases in `engine.py`. Aliases are not source passages or ticket facts. Inference makes no network calls.
 
-The classifier score is an **uncalibrated model output for classifier_severity**, not 'how often the final decision is right'. Safety-rule decisions have separate evidence; they do not inherit a calibrated percentage. The 0.70 threshold is provisional, fixed before holdout exposure. Templates/AI-proposed training labels must be reviewed and do not establish generalisation.
+The classifier score is an **uncalibrated model output for classifier_severity**, not 'how often the final decision is right'. Safety-rule decisions have separate evidence; they do not inherit a calibrated percentage. The 0.70 review threshold is provisional; in v0.5 it adds a review reason but no longer blocks an eligible assisted raise. Templates/AI-proposed training labels must be reviewed and do not establish generalisation.
 
 ## edge_cases_and_fallbacks
 - Fewer than six words, unsupported language or unknown account: classifier abstains, preserves declared priority and requires human triage.
-- Low classifier score: no classifier-driven auto-raise; show why review is needed. A contextual safety rule can independently raise in assisted mode.
+- Low classifier score: show why review is needed. In v0.5 a higher proposal can still raise in assisted mode; this is a synthetic demonstration policy, not permission for live use.
 - No reusable source: show no match; do not invent a troubleshooting step; require engineer review.
 - Possible privileged-access change or legal request: human-only; never execute access changes or produce legal advice.
 - A customer declaring P1 when the model suggests P3: effective priority remains P1 until a reasoned engineer change.
@@ -62,20 +61,22 @@ Deadlines are `original created_at + effective priority contract duration`. They
 Global suggestions mode blocks new automatic raises and requires human verification before accepting existing tickets. It preserves previous raised priorities and engineer decisions. Changes are persisted in SQLite and audited. Operational owner in the design: Head of Support; local access is unauthenticated, loopback-only. Team sign-off of the switch is pending.
 
 ## evaluation_protocol
-- Training: 300 synthetic rows; P1 70 / P2 75 / P3 90 / P4 65; 40 families. Labels are AI proposals pending human review.
-- Demo: six UI tickets + Jane's original 20 exposed cases (`evals/demo_reference_v0.csv`) + regression tests.
-- Holdout: 50 new INPUTS in `evals/eval_set_v0.csv`. Expected labels, names and dates remain blank until humans fill them. No predictions have been produced for them.
-- `validate` checks required human annotation, family ids and exact text overlap. Human semantic leakage review is still required.
-- `freeze` hashes expected answers and model/data before inference; `run` refuses an altered/unlabelled run.
-- Two graders independently judge every output; original grades and disagreements remain preserved. `summarise` never fabricates grades or time savings.
-- Do not tune on holdout outputs. Keep the original run and use a fresh holdout for a changed model.
+- Training: 300 synthetic rows, 70/75/90/65, 40 families; human label review is still pending.
+- Exposed development material: six UI tickets, Jane's original 20 examples, regression inputs and the 100 cases already evaluated.
+- Recorded runs: 50 reviewed cases in `eval_set_v0.csv` and 50 additional cases in `eval_set_v1_fresh.csv`; original manifests, predictions and grades are preserved.
+- The second batch's inputs were visible to the developer, and main grading used LLM-prefilled sheets. Do not claim a fully blind independent study. Luna confirmed her actual review of grading sheets bearing her name on 23 November.
+- E101-E200 in `eval_set_v2_candidates.csv` are additional INPUT candidates only. Semantic overlap review and expected answers are required before prediction; no human signatures are generated.
+- Freeze labels and model before a new run. A later tuned version requires fresh cases. The engine never reads evaluation files during training or interactive inference.
+- Hash checks allow only LF/CRLF conversion for historical Windows/Git files. Changes to labels, JSON content, whitespace beyond line-ending conversion or the model still fail the appropriate checks.
+- `summarise --check-only` recomputes existing results without modifying recorded metrics. The final audit additionally checks counts, source/customer isolation and preservation of original evidence.
+- Passing engineering checks does not satisfy the product criterion or measure time saving. Latest routine acceptance is 9/22 and P1 recall 9/14; both fail their gates.
 
 ## done_criteria
 - >=62% of human-labelled P3/P4 cases accepted unchanged by BOTH human graders, including correct severity/team and >=1 relevant source. Abstentions stay in the denominator.
 - P1 recall =100% on the finite human-labelled holdout; abstention is not a successful detection. This is not a guarantee for production.
 - False-P1 rate <=15% of human-labelled non-P1 cases, reported with numerator/denominator.
 - Redaction, customer isolation, never-lower, original SLA timestamps, takeover and global-switch engineering checks pass.
-- Product verdict remains pending until the human-labelled and independently graded run exists. Engineering tests alone never satisfy the first three criteria.
+- Product verdict is not_met on both recorded runs. A new launch decision requires a genuinely independent human-reviewed evaluation that meets the first three criteria; engineering tests cannot substitute.
 
 ## changes_since_skeleton
 These were found during inspection/development, BEFORE holdout execution. They must not be presented as the three most frequent evaluation misses.
@@ -103,11 +104,20 @@ These were found during inspection/development, BEFORE holdout execution. They m
 | EVAL-04 | Effective priority stays at the declared priority even when the proposed severity is higher (16 cases, e.g. E007 and E011, expected P1, left at P4) | sla / rules | In assisted mode, when proposed severity > declared priority, `effective_priority` = proposed severity and `auto_raised = true`, logged in the audit; never lower |
 | EVAL-05 | The team is left to "Human triage" while the expected team is clear (9 cases graded on routing; 31/50 outputs are Human triage, 24 of them where a named team was expected) | routing | The routing table covers Platform, Detection Engineering, Integrations, Reporting and Customer Success topics; "Human triage" only when the expected action requires a person to choose; team accuracy ≥ 70 % |
 
+### After the fresh run v0.5 (`evals/runs/v1_fresh`, 22 November 2026)
+
+| Id | Observed miss (cases) | Component | Testable requirement |
+|---|---|---|---|
+| EVAL-06 | Real P1s of attack types absent from training and rules: sensor tampering, API-key misuse, detection disabled fleet-wide, uncontrolled remote session, credential dumping (E054, E055, E058, E062, E064) | classifier | Any ticket mentioning a security control being removed or disabled, a credential or key used from an unknown origin, or an attacker tool or remote access the customer does not control, proposes **P1** and hands over; P1 recall = 100 % on the **next fresh** labelled set, not on these cases |
+| EVAL-07 | P3 tickets over-escalated to P2/P1 when a workaround or mitigation is stated (E065, E066, E071, E075, E080, E083, E085) | classifier | Stated workaround or mitigation ("still protected", "workaround", "other sites work") caps a classifier proposal at P3 unless a safety rule fires |
+| EVAL-08 | P1 incidents routed to the component team instead of Incident Response (E051, E053, E057, E060, E063) | routing | A P1 from a compromise rule always routes to Incident Response; component teams only for P1 outages without compromise |
+| EVAL-09 | Correct triage, but no cited source addresses the ticket's component (E059, E068, E070, E077, E088) | retrieval | Sources are filtered to the routed team's KB articles first; source hit@3 ≥ 80 % on the next fresh set |
+
 ## out_of_scope
 Customer-facing chatbot, customer messages, remediation, autonomous lowering, production identity/access control, external inference API, fine-tuning, other languages, auto-closing and automatic cross-customer incident merging.
 
 ## Exposed-demo diagnostic — 15 November 2026
-These observations come from a real automatic run on the 20 already exposed demo references. They are not two-person grading or independent holdout results. Requirements below are for a next version and are **not yet implemented**.
+These observations come from a real automatic run on the 20 already exposed demo references. They are not two-person grading or independent holdout results. This is the historical pre-fix observation table; the implemented corrections are listed under DEV-01 to DEV-06 below. It does not describe current run status.
 
 | Observation / cases | Next requirement |
 |---|---|
@@ -117,7 +127,7 @@ These observations come from a real automatic run on the 20 already exposed demo
 
 In the initial diagnostic, C03 missed proposed P1 and kept effective P4; C18 missed proposed P1 while preserving effective P1. Evaluate both proposed severity and effective priority so a safety rule is not mistaken for successful classification. Preserved initial outputs and provenance: `evals/ai_review/demo_diagnostic.json`; corrections are recorded below.
 
-The first official test still requires human validation of E001–E050 before inference and two independent human graders after inference. AI-proposed references in `evals/ai_review/proposed_labels_v0.csv` do not satisfy that requirement.
+The first official run was completed on reviewed references on 22 November. Its original evidence is preserved. New cases must be human-reviewed before inference and graded according to the documented protocol; generated references alone do not satisfy that requirement.
 
 ## v2 changes implemented after the exposed-demo baseline — 15 November
 
@@ -133,3 +143,9 @@ The miss table above describes the **initial** diagnostic. Preserve it as eviden
 | DEV-06: review imports must not invent validation or alter input incidents | Require explicit accept/correct, real reviewer name/time, correction explanation and valid expected fields for every row. Reject changed original inputs and existing output files; never run inference during import. Presence of fields alone cannot attest genuine review. |
 
 Regression evidence includes EN/FR volume anomalies, modest growth, planned backups, hypothetical/negated incidents, mixed legal requests, percentage boundaries, source isolation and review-import rejection. The post-fix exposed-demo run has 20/20 severity agreement and 8/8 proposed P1s, but **is not independent**. C09 Platform/Reporting, C15 mixed admin/dashboard help and C17 report-logo ownership remain provisional routing disagreements for the team to settle before freeze. No rule was added just to match those three reference teams.
+
+## Finalisation requirements implemented 23 November
+- PORT-01: legacy frozen files may differ only by Windows/Git LF/CRLF conversion; all other content changes are rejected. Preserve old manifests and outputs.
+- AUDIT-01: a check-only summary and submission audit recompute recorded results without predictions or overwriting evidence. Product failure remains visible.
+- UI-01: when CALM-01 selects a non-P1 class, label the displayed score with the scored class, not the original P1 class. This corrects display semantics without changing the evaluated engine or its predictions.
+- DOC-01: final brief, launch decision and current governance distinguish delivered synthetic functionality, proposed production tooling and remaining human work.

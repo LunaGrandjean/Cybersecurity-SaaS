@@ -1,87 +1,80 @@
-# 04 — Architecture · SLA-aware triage copilot · v0.4
+# 04 Architecture of the SLA triage copilot
 
-**Assignment 4 · updated 15 November 2026 · local synthetic-data prototype.**
-Implementation: `prototype/engine.py`, `server.py`, `store.py`, `console.js`.
-Product evaluation is **pending human annotation and grading**, not passed.
+**Updated 23 November 2026 | Actual evaluated engine v0.5 | Local synthetic-data prototype**
 
-## 1. One-line description
-An internal console classifies a new support ticket, preserves or raises its effective priority under an explicit policy, looks up its SLA and retrieves reusable evidence for an engineer. It never sends a customer message or executes a remediation.
+The console is a fixed internal triage workflow, not an autonomous tool-choosing agent. A classical classifier proposes severity; explicit rules, retrieval and human checkpoints bound the result. [Recorded evaluations](evals/report_v0.md) fail the launch criteria, so [the release decision](08_launch_memo.md) is no live assisted launch.
 
-## 2. Diagram
+## Workflow and human checkpoints
+
 ```mermaid
 flowchart TD
-    UI[Jane's console + new synthetic ticket] --> API[Local Python HTTP API]
-    API --> REDACT[1. Redact before inference and storage]
-    REDACT --> LOOKUP[2. Account + synthetic SLA contract]
-    LOOKUP --> MODEL[3. TF-IDF + weighted logistic regression]
-    MODEL --> RULES[4. Contextual severity rules + never lower]
-    RULES --> RET[5. TF-IDF source retrieval: same customer or generic KB]
-    RET --> POLICY[6. Language / confidence / source / privileged-action gates]
-    SWITCH[⏻ Global switch: suggestions-only by default] --> POLICY
-    POLICY -->|unsupported / uncertain / no source| HUMAN[⊘ Engineer takes over]
+    UI[Engineer enters invented ticket] --> API[Local Python HTTP API]
+    API --> REDACT[Redact before inference and persistence]
+    REDACT --> LOOKUP[Account lookup and original SLA timestamp]
+    LOOKUP --> ABS[Context and abstention rules]
+    ABS --> MODEL[TF-IDF and balanced logistic regression]
+    MODEL --> RULES[Contextual severity rules and never lower]
+    RULES --> RET[Top 3 same-customer or generic sources]
+    RET --> POLICY[Review gates and operating mode]
+    SWITCH["⏻ Global switch: suggestions-only by default"] --> POLICY
+    POLICY -->|unsupported, uncertain, sensitive, no source| HUMAN["⊘ Engineer reviews or takes over"]
     POLICY -->|suggestions-only| HUMAN
-    POLICY -->|assisted mode and eligible| RAISE[Preserve or raise priority; never lower]
-    RAISE --> REVIEW[⊘ P1/P2 routing and any downgrade need engineer review]
-    HUMAN --> REVIEW
-    REVIEW --> ACCEPT[Engineer accepts or corrects with a reason]
-    ACCEPT --> DB[(SQLite: redacted tickets + audit + switch)]
+    POLICY -->|assisted and eligible: synthetic demo only| RAISE[Keep or raise priority, never lower]
+    RAISE --> CHECK["⊘ Approval: P1/P2 and lowering require engineer verification"]
+    HUMAN --> CHECK
+    CHECK --> ACCEPT[Accept or change priority/team with a reason]
+    ACCEPT --> DB[(SQLite redacted ticket, audit and mode)]
 ```
 
-## 3. Components
-| Component | Rung / pattern | Trust / checkpoint | Observed or planned measure |
+Human checkpoints (the course's person marker): abstention for insufficient or unsupported input; approval for P1/P2 and lowering; human-only privileged/legal handling; manual takeover. The global switch is the course's override marker. Suggested production sampling of routine tickets remains a future policy, not an implemented sampling service.
+
+## Components
+
+| Component | Rung and pattern | Trust and checkpoint | Evidence or metric |
 |---|---|---|---|
-| Redaction | Rules / fixed chain | Local automatic preprocessing; best-effort regex, not certified DLP | Engineering redaction regression checks |
-| Account and SLA lookup | Rules / lookup | L4 for known synthetic accounts; unknown account abstains | Deadline anchored to original creation timestamp |
-| Severity classifier | Classical ML / routing | TF-IDF unigrams+bigrams + class-weighted logistic regression; seed 17 | Severity accuracy and P1 recall after human labels |
-| Safety overlay | Rules / gate | Assisted mode may raise; no automatic downgrade; exact matched ticket excerpt | Never-lower and contextual-rule checks |
-| Retrieval | TF-IDF cosine / fixed retrieval | L1; bilingual search aliases, minimum similarity 0.08; top 3; account filter before return | Human relevance judgement; source ids in outputs |
-| Human policy gate | Rules / abstention + approval | Unsupported language/account, low score, legal/privileged requests and missing sources need review; all P1/P2 reviewed | Handover behaviour; counter-metric false P1 |
-| Engineer UI + persistence | HTML/JS + local HTTP + SQLite | Named demo operator; reason for change; review before acceptance when required | Browser/API persistence and audit checks |
+| Redaction | Rung 1 rules, fixed preprocessing | Automatic best-effort masking, not certified DLP | Recognised-pattern regression checks |
+| Account/SLA lookup | Rung 1 deterministic lookup | Known synthetic account; unverified fallback for unknown account | Deadline remains anchored to creation time |
+| Severity | Rung 2 classical classification plus rung 1 contextual rules | Suggestions for an engineer; rules and abstentions use ticket excerpts | Latest P1 recall 9/14; severity accuracy 36/50 |
+| Retrieval | Rung 2 TF-IDF cosine, fixed index | Suggestion only; customer filter, minimum 0.08, top 3 | Candidate source hit 22/37; human relevance still required |
+| Human policy | Rung 1 gates | Approval, abstention, takeover and persistent mode switch | Handover agreement 47/50; never-lower 50/50 |
+| Console/API/audit | HTML/JS, Python standard-library ThreadingHTTPServer, SQLite | Local self-declared operator is not authentication | API/browser checks, persistence and audited corrections |
 
-No calibrated confidence probability is claimed. `classifier_score` belongs to `classifier_severity`; a rule override has its own evidence and does not transform that score into a probability of the final severity. Threshold 0.70 is a provisional design choice, not an evaluated guarantee. Below it, the classifier's suggestion remains visible for review but is not automatically applied. Separately matched P1 safety rules and bounded P2/P3 service-impact rules can raise in assisted mode. They always retain the never-lower invariant.
+No LLM, external inference API, production ticketing connector or remediation endpoint is used. The model cannot select tools or run a planning loop. A more complex agent is not justified by the current bounded workflow.
 
-The development safety policy includes a possible breach even if the same ticket also asks a legal question. A large outbound-volume jump (>=10x, >=50 GB final volume, comparable units) is a **possible incident**, not proof of data theft. Explicit hypothetical or planned-backup context does not alone trigger that rule. These thresholds and regex context handling are provisional, with known language/phrasing gaps; the independent evaluation is still required. Legal handling stays human-only and privileged-change requests cannot automatically raise through this exception.
+## Scores and priority policy
 
-## 4. Workflow or agent?
-A fixed workflow: the code chooses the stages in advance. The model never selects tools or loops. This matches the bounded triage task and makes failure and takeover points explicit. There is no LLM, external inference API, fine-tuning or agent framework in v0.4. The HTML v0.2 original is retained as `prototype/prototype_triage_copilot_v0.2.html`.
+Training uses TF-IDF unigrams/bigrams and balanced logistic regression, C=4, seed 17. A score is uncalibrated and does not mean the decision is correct that percentage of the time. Rule decisions have their own evidence. The calm/test-context cap can choose a non-P1 class; the console associates the displayed score with that scored class, rather than the initial class before the cap.
 
-## 5. Fallbacks
-- No reusable source: no invented troubleshooting; show no source and require human review.
-- Classifier score below 0.70: no model-driven auto-raise; record a human-review reason if no contextual rule matched. Separately matched policy rules may still raise in assisted mode.
-- Unknown account or language other than EN/FR: abstain; retain declared priority. An unknown account's displayed fallback SLA is explicitly provisional.
-- Privileged change / legal question: human-only handling; no access modification or legal answer.
-- Model failure: API returns 503 with manual-triage instructions; no partially created ticket or priority change.
-- API unreachable: the UI shows a connection error; the real ticketing system remains outside this prototype.
+In **suggestions-only**, new tickets keep their declared priority. In the v0.5 **assisted demonstration**, an eligible higher proposal raises the priority even below classifier score 0.70; low score adds a human-review reason. Abstention and privileged-change gates prevent such a raise; a separately matched critical rule can preserve incident urgency despite a legal question. All P1/P2 and any lowering still need engineer verification before acceptance. No current policy authorises this assisted mode on live tickets.
 
-## 6. Override switch ⏻
-- Target operational owner: Head of Support. **This is a role assignment in the design, not evidence of a real appointment.**
-- Implementation: header → Change mode → reason → `POST /api/switch`.
-- Default: `suggestions`. `assisted` is a deliberate opt-in for new tickets.
-- Scope: all new tickets. Existing raised priorities and human decisions are preserved; switching off must not downgrade them. Acceptance of existing tickets in suggestions mode requires a recorded human review.
-- Persistence: SQLite setting, with timestamp/operator/reason in audit.
-- Local operator names are self-declared; no authentication or production authorisation is implemented. Bind loopback only.
-- Engineering test evidence: see `evals/engineering_checks.md`.
-- Team test: **22 November 2026, 01:20 (UTC+01:00), operated by Malek Saoudi** on the local prototype (`python -m prototype.switch_drill --operator "Malek Saoudi"`); 7/7 checks passed. Switching assisted → suggestions took 0.003 s, new tickets were no longer raised, the earlier raised ticket stayed at P1, acceptance was blocked until a human review, both switch actions were audited with the operator, and the mode persisted after restart. Evidence: `evals/switch_drills/drill_2026-11-22_012010.json`. Next test: before every release, and at least monthly.
+P1=60 and P2=240 minutes come from the scenario. P3=1,440 and P4=4,320 are explicit demo choices. A change never restarts the clock. No automatic customer message, permissions change, containment or ticket closure occurs.
 
-## 7. Data and leakage
-| File | Purpose | Status |
-|---|---|---|
-| `prototype/data/training_tickets.csv` | 300 synthetic training rows: P1 70 / P2 75 / P3 90 / P4 65 | AI-proposed training labels, not human-reviewed; 40 template families; variants are not 300 independent incidents |
-| `prototype/data/knowledge_base.json` | 15 synthetic resolved/KB documents | Versioned demo fixtures with explicitly simulated reuse sign-off, not real production incidents |
-| `prototype/data/demo_tickets.json` | Six interactive demo inputs | Exposed during development; never a holdout |
-| `evals/demo_reference_v0.csv` | Jane's original 20 examples | Exposed during design/review; excluded from independent evaluation; source text preserved |
-| `evals/eval_set_v0.csv` | 50 new S4 candidate inputs in separate incident families | Expected answers deliberately blank; team must label before freeze/run |
-| `prototype/runtime/triage.sqlite3` | Redacted local demo tickets, audit and switch | Git-ignored; delete the file while stopped to reset the demo |
+## Fallbacks
 
-No real customer data is used. Fixture provenance is synthetic authoring; no public dataset was downloaded. Do not represent proposed training labels, fixture reuse flags or AI-generated evaluation inputs as human-validated evidence. Family-id and exact-normalised-text overlap are checked mechanically; a human must also review semantic near-duplicates before freezing. Evaluation files are never loaded by the interactive engine or training code.
+- Unknown account, unsupported language or insufficient detail: abstain, preserve declared priority and require a person; an unknown account's displayed clock is provisional.
+- Vague, attachment-only, legal, foreign-customer-data or unverified privileged requests: contextual abstention where recognised; exact wording coverage is incomplete.
+- Low classifier score: show the review reason; it does not by itself block an assisted-mode raise in v0.5.
+- No relevant source: do not invent a procedure; engineer review. Lexical retrieval may still return an irrelevant document, so non-empty results are not proof of relevance.
+- Model error: API returns 503 and manual-triage instructions without creating a partial ticket. API unreachable: the console shows a connection error; no production ticket system is integrated.
 
-## 8. Eval result v0
-**NOT YET EVALUATED.** The runner refuses unlabelled or unfrozen cases. `evals/report_v0.md` describes the protocol and pending human work. Engineering regression checks and browser verification are separate from the two-grader acceptance metric. No 62% achievement, 100% P1 recall, measured time saving or launch decision is claimed.
+## Stop switch and ownership
 
-## 9. Next
-Human-review training data and annotate the 50 holdout inputs. Freeze labels and model, run once, then have two people grade independently. Add each observed product miss to the spec before evaluating a later version on a fresh holdout.
+Default mode is suggestions-only. Header -> Change mode -> reason -> `POST /api/switch` persists the setting and operator/reason/time. It applies to new tickets and does not undo existing raised priorities or engineer decisions. Suggestions mode requires recorded verification before accepting existing tickets.
 
-## 10. Development correction and handoff — 15 November
-The initial exposed-demo diagnostic is preserved. The [separate post-fix run](evals/ai_review/post_fix_2026_11_15/comparison.md) records 20/20 proposed severities, 17/20 routes and 20/20 candidate-source hits against provisional references; this is tuning evidence, not a passed holdout. Three ownership disagreements remain C09/C15/C17. Search aliases are metadata, never evidence of ticket facts. The engine does not import evaluation files.
+Proposed owner: Head of Support by day, on-call support engineer by night. Local operator names are self-declared. A seven-check team drill was recorded on 22 November 2026 at 01:20 UTC+01:00 by Malek Saoudi; the switch took 0.003 seconds in that local test. [Original evidence](evals/switch_drills/drill_2026-11-22_012010.json). This is not a measured operational response time from alert to rollback. Current verification is in [engineering_checks.md](evals/engineering_checks.md).
 
-[Team validation instructions](evals/VALIDATION_EQUIPE.md) cover actual label review, guarded import, freeze, two independent graders and switch sign-off. The import creates a separate reviewed CSV only after explicit human decision/name/date fields are filled; it does not invoke inference or create grades.
+## Data, storage and evaluation
+
+| Data | Actual state |
+|---|---|
+| Training | 300 synthetic rows, 70/75/90/65 by P1/P2/P3/P4; 40 template families; human label review pending |
+| Knowledge base | 15 synthetic generic/customer documents; reuse approval is explicitly simulated |
+| Demonstrations | Six UI fixtures and 20 original exposed examples, excluded from independent evaluation |
+| Reviewed evaluations | 100 cases in `eval_set_v1.csv`, evaluated as two separate 50-case batches with different engine versions |
+| Additional candidates | E101-E200 in `eval_set_v2_candidates.csv`, unlabelled and unpredicted; human overlap review required |
+| Runtime | Git-ignored `prototype/runtime/triage.sqlite3`, redacted text, decisions and audit until reset |
+| Frozen evidence | Cases/outputs/manifests/grades under `evals/runs`; original files preserved during finalisation |
+
+Evaluation data is never loaded by training or interactive inference. New references must be reviewed before freeze and prediction. Existing exposed cases cannot establish generalisation of a model tuned on them. The second recorded batch was new but not fully blind because the developer had seen its inputs; main grading used LLM-prefilled sheets. The report retains these limits.
+
+The finalisation tooling checks the original hashes and recomputes recorded metrics without predictions or overwriting evidence. Historical LF/CRLF-only conversion is supported; any other content change remains blocked. [Final brief](product_brief.md) | [Launch decision](08_launch_memo.md).

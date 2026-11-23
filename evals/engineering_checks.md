@@ -1,8 +1,37 @@
+# Final engineering verification on 23 November 2026
+
+These checks verify the local synthetic-data workflow. They do not turn a failed product gate into a pass, validate new references or measure business benefit.
+
+## Current checks
+
+- **36 regression tests passed** in the locked Python 3.12 environment. Added coverage proves LF/CRLF-only portability while changed labels, content or extra whitespace remain rejected; new freezes record runtime/source/data provenance; check-only summaries do not overwrite recorded metrics.
+- **16 checks passed in Microsoft Edge**, covering browser -> API -> model/retrieval -> SQLite -> UI, redaction, review/acceptance gates, takeover, switch, reload persistence, audit export and mobile overflow. No JavaScript errors or page requests outside the local service. [Evidence](finalisation_2026_11_23/browser/browser_checks.json) and [screenshot](finalisation_2026_11_23/browser/prototype.png).
+- **Both stored metrics files recompute identically** from their original references, outputs and grades. v0 predictions match the historical hash under CRLF-only reconstruction; v1_fresh matches exact bytes. No run, grade, source engine or training data was changed. [Final audit](finalisation_2026_11_23/submission_audit_final.json), [original evidence snapshot](finalisation_2026_11_23/original_evidence_sha256.json).
+- The 100 additional input candidates have unique ids and no exact normalised text overlap with existing training/evaluation inputs. This does not certify semantic independence; all expected answers and human fields remain blank. No predictions were run on them.
+- The console now labels the score returned after CALM-01 with its scored class, rather than incorrectly pairing that score with the original P1 label. The evaluated engine and archived predictions remain unchanged.
+
+## Runtime reproduction limit
+
+The current browser build has fingerprint `1ce52f110ca7f043`; the archived v0.5 run records `e4ef11ac89758672`. A fingerprint includes source/data bytes and Python/scikit-learn/NumPy/SciPy versions. The old manifests did not store all those details, so exact reconstruction of their inference environment is not certified. Recomputing metrics from preserved predictions is different from reproducing inference. The audit records current versions and this mismatch; new freezes include the detailed provenance. No model-identity check was weakened to hide the difference.
+
+## Commands
+
+```powershell
+uv run --frozen --python 3.12 python -m unittest prototype.test_review prototype.test_evaluation prototype.test_workflow -v
+uv run --frozen --python 3.12 python -m prototype.audit_submission
+```
+
+Browser QA used a separate local server/database on port 8767 and invented demo tickets. The normal user's database was not used. The only evaluation-protocol grades produced by regression tests belong to clearly fictional temporary unit fixtures, not to project evidence.
+
+## Historical verification
+
+The material below is preserved as dated development history. Its pending-label statements describe November 12-15, before the recorded November 22 runs. Current product status is [no live assisted launch](../08_launch_memo.md); 100 additional references and actual user research remain human work.
+
 # S4 engineering verification — updated 15 November 2026
 
 These checks validate implementation behaviour. **They are not the independent product evaluation, human research, or measured handling-time savings.** No holdout predictions were produced.
 
-## Current verification — 15 November
+## Historical verification — 15 November
 
 Command from the repository root:
 ```powershell

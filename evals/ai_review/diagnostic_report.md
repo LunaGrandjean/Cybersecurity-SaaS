@@ -1,5 +1,7 @@
 # Diagnostic exploratoire - 15 novembre 2026
 
+> Diagnostic historique du 15 novembre. Les evaluations du 22 novembre et la decision actuelle figurent dans [report_v0.md](../report_v0.md) et [08_launch_memo.md](../../08_launch_memo.md). Les mentions de travail en attente ci-dessous concernent uniquement cette execution initiale.
+
 **Comparaison automatique sur les 20 cas de demonstration deja exposes. Aucun grade humain.**
 
 Les references proviennent du brouillon de Jane, avec une adaptation structuree proposee par IA avant execution. Elles restent a verifier. Les desaccords de routage peuvent notamment traduire une convention d'equipe encore ambigue.

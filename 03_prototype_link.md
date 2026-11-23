@@ -34,3 +34,7 @@ L1 for the similar-ticket suggestions.
 - **S4 functional version:** local v0.4; run instructions in [prototype/README.md](prototype/README.md). The original v0.2 HTML is preserved. S4 handles new synthetic inputs; its classifier score is uncalibrated and independent evaluation is pending.
 - **S4 screenshot:** [local v0.4 console](prototype/prototype_v0.4.png).
 - **S4 correction checked 15 November:** [current screenshot](evals/engineering_2026_11_15_retry/prototype.png), [29 engineering tests / 16 browser checks](evals/engineering_checks.md), [team validation instructions](evals/VALIDATION_EQUIPE.md). Older screenshots and Jane's original remain preserved; the independent human evaluation is still pending.
+
+
+## Final verification on 23 November 2026
+The current local console and evaluated engine are described in [the final brief](product_brief.md). [Current screenshot](evals/finalisation_2026_11_23/browser/prototype.png), [engineering evidence](evals/engineering_checks.md), and [launch decision](08_launch_memo.md). The older images remain historical references. No live assisted launch is approved.

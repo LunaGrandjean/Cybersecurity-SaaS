@@ -1,5 +1,7 @@
 # Investment memo — SLA-aware triage agent (P7, cybersecurity SaaS)
 
+> **Historical conditional investment hypothesis. Updated decision, 23 November 2026:** [08_launch_memo.md](08_launch_memo.md) records no live assisted launch because the evaluated safety and routine-acceptance gates fail. Financial figures below are scenario assumptions, not realised savings. Actual handling time and avoided SLA penalties have not been measured.
+
 **Recommendation: conditional go. Expected value ≈ €133k a year, above both the do-nothing (€112k) and the next-best project (€100k), on one condition: the S4 prototype must show ≥ 17 % handling time saved on routine tickets. Below that, no-go. Because the pessimistic case (−€187k) does not clear the hurdle, we commit the integration budget only after the test, not before.**
 
 ## 1. What is it worth?
