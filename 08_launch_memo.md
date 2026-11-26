@@ -1,49 +1,41 @@
-# 08 Launch decision for the SLA triage copilot
+# Launch memo — SLA-aware triage copilot (Team 8, P7) — 26 November 2026
 
-**Team 8 · 23 November 2026 · evaluated engine v0.5.**
+> One page. Evaluated engine v0.5. Full evidence: `evals/report_v0.md`; plan: `06_07_experiments_operations.md`.
 
-## Decision
+## 1 · Decision
+**No-go** for assisted mode on live tickets. We keep the local demonstration on invented data, in suggestions-only mode by default, and we do not release the integration budget. The next decision is read once a fresh, reviewed batch has been frozen and run once (E101–E200), by the Head of Support and the AI product team (Team 8).
 
-**Do not launch assisted mode on live customer tickets.** Keep the current release as a local demonstration with synthetic data and suggestions-only as its default. Do not release the production integration budget on the strength of these results.
+**Budget we ask for:** **€20,000** for the next validation step only, which is the base evaluation line of `02_sizing.xlsx` (Inputs D51). It pays for labelling, freezing and grading a fresh batch with two human graders. The full fixed-cost envelope of **€133,333 a year** (Decision D14: integration €33.3k amortised, supervision €45k, evaluation and re-evaluation €35k, monitoring €20k) is requested only if that batch passes every gate.
 
-The latest recorded run detects 9 of 14 expected P1 incidents and has 9 of 22 routine triages accepted unchanged by both recorded graders. Both fall below the agreed gates. Passing engineering tests and never automatically lowering a priority do not compensate for an emergency that the customer originally declared too low.
+## 2 · Evidence
+- **Eval** (50 fresh cases E051–E100, two graders, the judge checked on a golden set of 30: human–human agreement 29/30 = 96.7 %, human–judge 29/29 = 100 %): **9/22 = 40.9 %** of P3/P4 triages accepted unchanged by both graders, against the criterion **"≥ 62 % of P3/P4 triages accepted unchanged by two graders, and no P1 proposed below P1"**. **Not met.**
+- **Guardrails:** P1 detected **9/14** (100 % required, **not met**). False P1 **3/28 = 10.7 %** (≤ 15 %, met). Priority lowered below the declaration **0/50** on each run (met). Customer messages sent **0**: no such endpoint exists. Checked on every frozen run.
+- **What the A/B will prove:** routine handling time from **33 to ≤ 27.4 min** (−17 %, the investment flip point). Units per arm for handling time are not computed yet, because its variance is unmeasured and will be measured in shadow mode. Detecting the −30 % effect on SLA breaches would need ≈ 44,000 tickets per arm. Duration: **2 weeks of shadow + 13 weeks of alternating days**, set by P1 recall, the slowest guardrail.
+- **Sizing:** base **€152k** net in year 1 against a hurdle of **€100k** (rule-based SLA routing in the ticketing tool). Expected value **≈ €133k**. Do-nothing trajectory **≈ €112k**. These are modelled values, not realised ones: the 40.9 % acceptance implies only ≈ 11 % of handling time saved, below the 17 % flip.
 
-## Evidence behind the decision
+## 3 · Rollout steps
+| Step | Scope | Duration | Gate (metric · threshold · read date) | Signs the next step |
+|---|---|---|---|---|
+| 0 | Fresh offline batch, then shadow mode on live tickets | Batch: 2 weeks · shadow: 2 weeks | P1 recall 100 %, P3/P4 acceptance ≥ 62 %, false P1 ≤ 15 % on a frozen batch · **not met on 26 Nov** | Head of Support, with the DPO reading |
+| 1 | Suggestions-only for all engineers | 2 weeks | 0 lowered priorities · P1 recall 100 % on the weekly sample | Support lead |
+| 2 | Assisted mode on alternating days (the A/B) | 13 weeks | Handling time −17 % on "on" days · guardrails green · ship / iterate / kill at the end of the quarter | Head of Support + AI product team |
+| 3 | Assisted every day, with "off" days kept as a holdout | 6 months | Monthly: four monitoring layers green, drift review | Head of Support |
 
-| Gate | Initial run, 50 cases | Latest run, 50 additional cases | Decision threshold |
-|---|---|---|---|
-| P3/P4 accepted unchanged by both recorded graders | 2/17 = 11.8% | 9/22 = 40.9% | At least 62%: not met |
-| Expected P1 incidents proposed P1 | 11/14 = 78.6% | 9/14 = 64.3% | 100% on the finite holdout: not met |
-| False P1 among cases labelled P2/P3/P4 | 7/28 = 25.0% | 3/28 = 10.7% | At most 15%: met on latest run |
-| Priority automatically lowered below declaration | 0/50 | 0/50 | Zero: met on both runs |
-| Relevant candidate source id in top 3 | 14/34 = 41.2% | 22/37 = 59.5% | Diagnostic; source usefulness still needs human judgement |
+## 4 · Rollback & the switch
+**Trigger:** one confirmed P1 proposed below P1, one priority lowered without an engineer, a 5-minute API outage, or a P1-recall alert from the weekly re-run. **Who decides:** the Head of Support by day, the on-call support engineer by night, and either one is enough. **Action:** suggestions-only (`POST /api/switch`, from the console header), then engine off and manual triage, then redeploy of the previous tagged version. **Time to execute:** the switch itself takes 0.003 s, with a target of under 15 min from alert to switch. **What people see:** engineers see a "suggestions only" banner and no automatic raises, and priorities already raised are kept. Customers see nothing, because the agent never contacts them. **Last tested: 22 November 2026, on the local prototype, by Malek Saoudi (7/7 checks).**
 
-The frozen cases, outputs and original grades remain in `evals/runs/v0` and `evals/runs/v1_fresh`. The full interpretation is in [the evaluation report](evals/report_v0.md). The two batches use different cases: their percentages describe the two runs, not a controlled estimate of improvement on the same population.
+## 5 · Owners — and who signs
+| Decision | Owner | Written where |
+|---|---|---|
+| Run an experiment on real users | Head of Support signs; the DPO reads | 06_07 §1–§2 · governance.md |
+| Read the weekly numbers and act | Support lead (product and guardrails); AI product team (model quality) | 06_07 §3 |
+| Press the switch | Head of Support; at night, the on-call support engineer | 06_07 §4 · governance.md |
+| Approve a release (rules, classifier, sources, routing) | AI product team, with the eval re-run; the Head of Support co-signs any change of mode | evals/README.md |
+| Keep the trace, answer a customer or a regulator | AI product team keeps it; the Head of Support answers, with the DPO for personal data | governance.md |
 
-The development author had seen the second batch's inputs before the fixes. That batch contains new incidents but is not a fully blind holdout. The main grading files started from an LLM-judge prefill, creating a possible anchoring effect. Luna confirmed her actual review and approval of the grading files bearing her name on 23 November 2026. These limitations remain attached to the results; neither model agreement nor a named CSV alone establishes independent human judgement.
+**This no-go is signed by Team 8: Luna Grandjean, Malek Saoudi and Jane Galthie.**
 
-## Business case
-
-The [investment memo](02_investment_memo.md) models a conditional expected annual value of about EUR133k, based on assumptions about handling time, avoided SLA breaches, adoption and costs. Those assumptions are not realised savings. The prototype has no production users, measured handling-time comparison or observed avoided penalties.
-
-Under the historical timing assumption, 40.9% acceptance multiplied by 9.1 minutes per accepted triage and divided by 33 minutes is approximately **11.3% potential handling-time reduction**. This calculation is an illustrative proxy, not a measurement, and is below the assumed 17% investment flip point. Even a better proxy would not override the missed-P1 gate.
-
-## Permitted scope and human control
-
-The current console may be demonstrated locally with invented tickets. Engineers can inspect sources, verify or change priority/team with a reason, take over and export the audit. It sends no customer message and executes no remediation. Assisted mode remains available for synthetic demonstrations of the workflow; its availability is not an approval for live use.
-
-In the proposed operating model, the Head of Support owns the stop switch by day and the on-call support engineer by night. Switching to suggestions-only prevents raises on new tickets, retains earlier raised priorities and requires review before acceptance. The team recorded a seven-check local switch drill on 22 November; current engineering evidence is in [engineering_checks.md](evals/engineering_checks.md). Real operational appointments and production authorisations are outside this classroom prototype.
-
-## Conditions before reconsidering launch
-
-1. Review the 300 synthetic training labels and their 40 template families, and establish authoritative, customer-scoped reusable sources. Simulated KB sign-off is insufficient for live operations.
-2. Complete semantic overlap review and human expected answers for a genuinely unseen evaluation batch. The repository has 100 reviewed cases and 100 additional input candidates; **200 candidates are not 200 reviewed or evaluated cases**. Freeze references and model before prediction, then obtain the required human grading.
-3. Meet the P1, routine-acceptance and false-P1 gates on that batch, reporting counts by language, tier and severity. Any later tuning requires another independent batch. A perfect finite test does not guarantee production recall.
-4. Replace simulated research with observed user behaviour, measure the actual manual baseline and assisted handling time, and derive an experiment duration using observed variance and the chosen day-level randomisation unit.
-5. Obtain the Head of Support and DPO review, real authentication and access controls, appropriate retention, an operational audit/monitoring setup and a tested rollback before a live shadow study. Production tooling described in the [operations plan](06_07_experiments_operations.md) is planned, not deployed.
-
-## Release and submission status
-
-The final brief, architecture, metrics, experiment/operations plan, spec and this decision form the written handoff. Original evidence is preserved; the finalisation audit records verification separately. New input candidates and a human-review guide are prepared for the remaining evaluation work.
-
-Human review of those additional cases, real-user research and operational approval cannot be replaced by generated signatures or simulated results. Commit authorship, the course's team-size/four-author requirement and any required classroom starter exercise must be reconciled with the lecturer. Create the final Git tag only after the team has reviewed the final commit; no external release, push or operational approval is implied by this memo.
+## 6 · What we do not know yet
+- **P1 recall on attack types never seen.** It fell from 78.6 % to 64.3 % on the fresh cases. Next experiment: freeze and run once on E101–E200 (100 references reviewed by Jane and Luna on 23 November; 7 cases flagged as close to earlier ones, to be settled before the freeze).
+- **Whether engineers use it the way we designed it.** The S3 interviews were simulated within the team. Next experiment: three real support engineers, with a usability test on the agent-is-wrong case.
+- **Real handling time.** The 33 min, the 12 min of triage and the −17 % are assumptions. How we will measure it: time engineers' tickets with and without the copilot during the two weeks of shadow mode.
